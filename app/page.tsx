@@ -9,6 +9,7 @@ export default function Home() {
       <h1 className="mb-4 text-4xl font-bold sm:text-7xl">
         React base data table
       </h1>
+
       <p className="text-foreground mb-8 max-w-[600px] sm:text-base">
         A powerful and customizable React data table component with built-in
         sorting, filtering, virtualization, and more.
