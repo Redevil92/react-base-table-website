@@ -10,13 +10,13 @@ const data = [
 ]
 
 const headers: BaseTableHeader[] = [
-  { text: "Name", id: "name", width: 200 },
-  { text: "Age", id: "age", width: 100 },
-  { text: "Country", id: "country", width: 200 },
+  { text: "Name", id: "name", width: 200, hasFilter: true },
+  { text: "Age", id: "age", width: 100, hasFilter: true },
+  { text: "Country", id: "country", width: 200, hasFilter: true },
 ]
 
-const SimpleBaseTable = () => (
+const TableWithFilters = () => (
   <BaseTable items={data} headers={headers}></BaseTable>
 )
 
-export default SimpleBaseTable
+export default TableWithFilters

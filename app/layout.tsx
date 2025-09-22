@@ -7,6 +7,7 @@ import { Footer } from "@/components/navigation/footer"
 import { Navbar } from "@/components/navigation/navbar"
 import { Providers } from "@/components/providers"
 
+import "react-base-data-table/style.css"
 import "@/styles/globals.css"
 
 const inter = Inter({

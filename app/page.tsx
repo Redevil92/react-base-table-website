@@ -2,6 +2,7 @@ import { Link } from "lib/transition"
 
 import { PageRoutes } from "@/lib/pageroutes"
 import { buttonVariants } from "@/components/ui/button"
+import SimpleBaseTable from "@/components/tableExamples/simpleTable"
 
 export default function Home() {
   return (
@@ -14,6 +15,8 @@ export default function Home() {
         A powerful and customizable React data table component with built-in
         sorting, filtering, virtualization, and more.
       </p>
+
+      <SimpleBaseTable />
 
       <div className="flex items-center gap-5">
         <Link

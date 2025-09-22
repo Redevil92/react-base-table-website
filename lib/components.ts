@@ -8,6 +8,7 @@ import Mermaid from "@/components/markdown/mermaid"
 import Note from "@/components/markdown/note"
 import { Step, StepItem } from "@/components/markdown/step"
 import SimpleBaseTable from "@/components/tableExamples/simpleTable"
+import TableWithFilters from "@/components/tableExamples/tableWithFilters"
 
 export const components = {
   a: RoutedLink,
@@ -26,4 +27,5 @@ export const components = {
   TabsList,
   TabsTrigger,
   SimpleBaseTable,
+  TableWithFilters,
 }
