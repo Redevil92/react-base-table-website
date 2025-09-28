@@ -2,7 +2,7 @@ import { Link } from "lib/transition"
 
 import { PageRoutes } from "@/lib/pageroutes"
 import { buttonVariants } from "@/components/ui/button"
-import SimpleBaseTable from "@/components/tableExamples/simpleTable"
+import TableWithCustomGroups from "@/components/tableExamples/tableWithGroup/groupFootballExample/tableWithCustomGroups"
 
 export default function Home() {
   return (
@@ -16,7 +16,7 @@ export default function Home() {
         sorting, filtering, virtualization, and more.
       </p>
 
-      <SimpleBaseTable />
+      <TableWithCustomGroups />
 
       <div className="flex items-center gap-5">
         <Link
