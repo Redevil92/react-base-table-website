@@ -15,8 +15,9 @@ export default function Home() {
         A powerful and customizable React data table component with built-in
         sorting, filtering, virtualization, and more.
       </p>
-
-      <TableWithCustomGroups />
+      <div className="h-[500px] w-300 overflow-auto rounded border">
+        <TableWithCustomGroups />
+      </div>
 
       <div className="flex items-center gap-5">
         <Link
