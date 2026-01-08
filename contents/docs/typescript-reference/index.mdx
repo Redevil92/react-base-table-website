@@ -1,0 +1,173 @@
+---
+title: TypeScript Reference
+description: Complete TypeScript type definitions for react-base-table.
+keywords: ["typescript", "types", "interfaces", "reference", "API"]
+---
+
+## TypeScript Reference
+
+Complete type definitions for react-base-table.
+
+### BaseTableProps
+
+```tsx
+export interface BaseTableProps<T> {
+  // Data
+  headers: BaseTableHeader[]
+  items: TableItem[]
+  height?: string
+
+  // Features
+  advancedSettings?: AdvancedTableSettings
+  highlightCondition?: HighlightCondition[]
+  comments?: CommentData[]
+  activeFilters?: ActiveTableFilter[]
+  groupBy?: string
+  linkedGroups?: LinkedGroup[]
+
+  // Event Handlers
+  onChange?: (
+    itemUpdated: T,
+    originalIndex: number,
+    fromArray?: FromArrayData
+  ) => void
+  onBulkChange?: (items: BulkChangeItem<T>[], headerId?: string) => void
+  onBulkFieldChange?: (items: FieldChangeItem<T>[], headerId: string) => void
+  onSetHighlightCondition?: (
+    highlight: HighlightCondition,
+    item: TableItem
+  ) => void
+  onRemoveHighlightCondition?: (
+    highlight: HighlightCondition,
+    cssProperty: keyof CSSProperties,
+    item: TableItem
+  ) => void
+  onSaveComment?: (comment: CommentData, item: TableItem) => void
+  onDeleteComment?: (comment: CommentData, item: TableItem) => void
+  onResetSort?: () => void
+  onRowDoubleClick?: (item: T) => void
+  onSortByColumn?: (columnId: string) => void
+  onAddListOption?: (newOption: string, header: BaseTableHeader) => void
+  onRowsReordered?: (fromIndex: number, toIndex: number) => void
+
+  // Custom Rendering
+  groupByCustomRender?: GroupByCustomRender
+}
+```
+
+### BaseTableHeader
+
+```tsx
+interface BaseTableHeader {
+  id: string
+  text: string
+  hasFilter?: boolean
+  width?: number
+  children?: BaseTableHeader[]
+  editOptions?: EditOptions
+  fromArray?: string
+  sortable?: boolean
+  align?: "left" | "center" | "right"
+  customSort?: (a: TableItem, b: TableItem, ascendingOrder: boolean) => number
+  customHeader?: (header: BaseTableHeader) => ReactNode
+  customRender?: (
+    item: TableItem,
+    header: BaseTableHeader,
+    fromArrayData?: FromArrayData,
+    isDisabled?: boolean
+  ) => ReactNode
+}
+```
+
+### EditOptions
+
+```tsx
+interface EditOptions {
+  editable?: boolean
+  isDisabled?: (item: TableItem, fromArrayData?: FromArrayData) => boolean
+  notApplicable?: (item: TableItem, fromArrayData?: FromArrayData) => boolean
+  greyedOutIfNotEditable?: boolean
+  required?: boolean
+  type: TableHeaderType
+  options?: string[]
+  defaultValue?: string | number
+  canAddNewOption?: boolean
+}
+```
+
+### TableHeaderType
+
+```tsx
+const TableHeaderType = {
+  STRING: "string",
+  LIST: "list",
+  NUMBER: "number",
+} as const
+
+type TableHeaderType = "string" | "list" | "number"
+```
+
+### AdvancedTableSettings
+
+```tsx
+interface AdvancedTableSettings {
+  marginTop?: string
+  noBorder?: boolean
+  pinColumns?: boolean
+  alignCenterInLine?: boolean
+  currentSortId?: string
+  contrastRow?: boolean
+  indexUseOriginalOrder?: boolean
+  enableRowDragDrop?: boolean
+  currentUsername?: string
+  showIndex?: boolean
+  selectNewOptionOnAdd?: boolean
+  canAddListOptions?: boolean
+  showFooter?: boolean
+  rowIdProperty?: string
+  tableId?: string
+  focusedRowIndex?: number
+  showFlashOnCellUpdate?: boolean
+  disabledRows?: DisabledRowsConfig
+}
+```
+
+### Supporting Types
+
+```tsx
+interface HighlightCondition {
+  id: string
+  headerId: string
+  itemId: string | number
+  style: CSSProperties
+}
+
+interface CommentData {
+  id: string
+  headerId: string
+  itemId: string | number
+  text: string
+  author: string
+  timestamp: Date
+}
+
+interface ActiveTableFilter {
+  headerId: string
+  values: string[]
+}
+
+interface LinkedGroup {
+  masterGroupName: string
+  linkedGroupNames: string[]
+}
+
+interface FromArrayData {
+  fromArrayIndex: number
+  headerId: string
+}
+
+interface DisabledRowsConfig {
+  property: string
+  values: string[] | number[] | boolean[]
+}
+```

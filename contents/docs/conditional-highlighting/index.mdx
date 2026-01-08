@@ -1,0 +1,121 @@
+---
+title: Conditional Highlighting
+description: Highlight cells based on conditions with custom styling.
+keywords:
+  [
+    "highlighting",
+    "conditional formatting",
+    "highlightCondition",
+    "CSSProperties",
+  ]
+---
+
+## Conditional Highlighting
+
+Apply dynamic styles to cells based on data conditions.
+
+### Configuration
+
+```tsx
+interface HighlightCondition {
+  id: string
+  headerId: string
+  itemId: string | number
+  style: CSSProperties
+}
+
+;<BaseTable
+  headers={headers}
+  items={items}
+  highlightCondition={[
+    {
+      id: "highlight-1",
+      headerId: "status",
+      itemId: 1,
+      style: { backgroundColor: "#ffeb3b", color: "#000" },
+    },
+    {
+      id: "highlight-2",
+      headerId: "amount",
+      itemId: 2,
+      style: { backgroundColor: "#f44336", color: "#fff" },
+    },
+  ]}
+/>
+```
+
+### Adding Highlights
+
+Handle user-initiated highlighting:
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  highlightCondition={highlights}
+  onSetHighlightCondition={(highlight, item) => {
+    console.log("Add highlight:", highlight)
+    console.log("For item:", item)
+
+    setHighlights((prev) => [...prev, highlight])
+  }}
+/>
+```
+
+### Removing Highlights
+
+Remove specific CSS properties from highlights:
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  highlightCondition={highlights}
+  onRemoveHighlightCondition={(highlight, cssProperty, item) => {
+    console.log(`Remove ${cssProperty} from highlight ${highlight.id}`)
+
+    setHighlights((prev) =>
+      prev.map((h) => {
+        if (h.id === highlight.id) {
+          const { [cssProperty]: removed, ...rest } = h.style
+          return { ...h, style: rest }
+        }
+        return h
+      })
+    )
+  }}
+/>
+```
+
+### Common Highlighting Patterns
+
+```tsx
+// Warning - Yellow
+{ backgroundColor: "#fff3cd", color: "#856404" }
+
+// Error - Red
+{ backgroundColor: "#f8d7da", color: "#721c24" }
+
+// Success - Green
+{ backgroundColor: "#d4edda", color: "#155724" }
+
+// Info - Blue
+{ backgroundColor: "#cce5ff", color: "#004085" }
+
+// Custom font weight
+{ fontWeight: "bold" }
+
+// Border highlight
+{ border: "2px solid #007bff" }
+```
+
+### Persistent Highlights
+
+Store highlights in your database for persistence:
+
+```tsx
+onSetHighlightCondition={async (highlight, item) => {
+  await saveHighlightToDatabase(highlight)
+  setHighlights((prev) => [...prev, highlight])
+}}
+```

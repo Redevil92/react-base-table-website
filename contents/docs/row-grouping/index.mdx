@@ -1,0 +1,98 @@
+---
+title: Row Grouping
+description: Group table rows by column values with expandable sections.
+keywords: ["row grouping", "groupBy", "expand", "collapse", "groups"]
+---
+
+## Row Grouping
+
+Group rows by a column value to organize data into expandable sections.
+
+### Basic Grouping
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  groupBy="department" // Group by the "department" field
+/>
+```
+
+### Example Data
+
+```tsx
+const items = [
+  { id: 1, name: "John", department: "Engineering" },
+  { id: 2, name: "Jane", department: "Engineering" },
+  { id: 3, name: "Bob", department: "Design" },
+  { id: 4, name: "Alice", department: "Design" },
+]
+
+// Results in:
+// ▼ Engineering
+//   - John
+//   - Jane
+// ▼ Design
+//   - Bob
+//   - Alice
+```
+
+### Group Header Customization
+
+Use `groupByCustomRender` to customize group headers:
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  groupBy="department"
+  groupByCustomRender={(
+    groupBy,
+    value,
+    columnsCount,
+    isCollapsed,
+    onCollapseGroup,
+    filteredItemsInGroup,
+    masterGroupName,
+    linkedGroupNames
+  ) => (
+    <tr onClick={() => onCollapseGroup(value)}>
+      <td colSpan={columnsCount}>
+        <span>{isCollapsed ? "▶" : "▼"}</span>
+        <strong>{value}</strong>
+        <span>({filteredItemsInGroup.length} items)</span>
+      </td>
+    </tr>
+  )}
+/>
+```
+
+### groupByCustomRender Parameters
+
+| Parameter              | Type                  | Description                       |
+| ---------------------- | --------------------- | --------------------------------- |
+| `groupBy`              | `string`              | The grouping field name           |
+| `value`                | `string`              | Current group value               |
+| `columnsCount`         | `number`              | Total columns for colspan         |
+| `isCollapsed`          | `boolean`             | Current collapse state            |
+| `onCollapseGroup`      | `function`            | Toggle collapse callback          |
+| `filteredItemsInGroup` | `ItemWithGroupInfo[]` | Items in this group               |
+| `masterGroupName`      | `string`              | Parent group name (linked groups) |
+| `linkedGroupNames`     | `string[]`            | Related group names               |
+
+## Next Steps
+
+<CardGrid>
+  <Card
+    subtitle="Grouping"
+    title="Custom Group Rendering"
+    description="Advanced group header customization."
+    href="/docs/row-grouping/custom-group-rendering"
+  />
+  <Card
+    subtitle="Grouping"
+    title="Linked Groups"
+    description="Connect multiple groups together."
+    href="/docs/row-grouping/linked-groups"
+  />
+</CardGrid>

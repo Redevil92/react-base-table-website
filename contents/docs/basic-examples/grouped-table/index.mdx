@@ -1,0 +1,62 @@
+---
+title: Grouped Table
+description: Learn how to create a table with grouped rows.
+keywords: ["grouped", "table", "expandable", "react-base-table"]
+---
+
+## Grouped Table
+
+This example shows how to create a table with grouped and expandable rows.
+
+### Example
+
+```tsx
+import { useState } from "react"
+import BaseTable, { Column } from "react-base-table"
+
+import "react-base-table/styles.css"
+
+const data = [
+  {
+    id: "group-1",
+    name: "Engineering",
+    children: [
+      { id: 1, name: "John Doe", role: "Developer" },
+      { id: 2, name: "Jane Smith", role: "Developer" },
+    ],
+  },
+  {
+    id: "group-2",
+    name: "Design",
+    children: [
+      { id: 3, name: "Bob Johnson", role: "Designer" },
+      { id: 4, name: "Alice Brown", role: "Designer" },
+    ],
+  },
+]
+
+function GroupedTable() {
+  const [expandedRowKeys, setExpandedRowKeys] = useState(["group-1"])
+
+  return (
+    <BaseTable
+      data={data}
+      width={600}
+      height={400}
+      expandedRowKeys={expandedRowKeys}
+      onExpandedRowsChange={setExpandedRowKeys}
+    >
+      <Column key="name" dataKey="name" title="Name" width={300} />
+      <Column key="role" dataKey="role" title="Role" width={200} />
+    </BaseTable>
+  )
+}
+
+export default GroupedTable
+```
+
+### Key Points
+
+- Use `children` property in your data to define nested rows
+- Control expansion with `expandedRowKeys` and `onExpandedRowsChange`
+- Group headers automatically render when data contains children

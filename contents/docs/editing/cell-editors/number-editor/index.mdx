@@ -1,0 +1,73 @@
+---
+title: Number Editor
+description: Edit numeric values with the number editor.
+keywords: ["number editor", "numeric", "input", "number input"]
+---
+
+## Number Editor
+
+The number editor handles numeric values with validation.
+
+### Configuration
+
+```tsx
+{
+  id: "quantity",
+  text: "Quantity",
+  align: "right",
+  editOptions: {
+    editable: true,
+    type: "number",
+    defaultValue: 0,
+    required: true,
+  },
+}
+```
+
+### Properties
+
+| Property        | Type       | Description           |
+| --------------- | ---------- | --------------------- |
+| `type`          | `"number"` | Editor type           |
+| `defaultValue`  | `number`   | Default numeric value |
+| `required`      | `boolean`  | Field is required     |
+| `isDisabled`    | `function` | Conditionally disable |
+| `notApplicable` | `function` | Mark as N/A           |
+
+### Features
+
+- Numeric input validation
+- Supports integers and decimals
+- Min/max validation (via custom render)
+- Right-aligned by default
+
+### Example
+
+```tsx
+{
+  id: "price",
+  text: "Price",
+  align: "right",
+  editOptions: {
+    editable: true,
+    type: "number",
+    defaultValue: 0,
+  },
+  customRender: (item, header) => (
+    <span>
+      ${item[header.id].toFixed(2)}
+    </span>
+  ),
+}
+```
+
+### Validation
+
+```tsx
+editOptions: {
+  editable: true,
+  type: "number",
+  isDisabled: (item) => item.readonly === true,
+  notApplicable: (item) => item.type === "free",
+}
+```

@@ -1,0 +1,106 @@
+---
+title: Copy and Paste
+description: Copy and paste data in and out of the table.
+keywords: ["copy", "paste", "clipboard", "data import"]
+---
+
+## Copy and Paste
+
+Support clipboard operations for fast data entry and export.
+
+### Copy Functionality
+
+Copy selected cells to clipboard:
+
+```tsx
+const handleCopy = () => {
+  const selectedData = getSelectedCells()
+  const text = selectedData.map((row) => row.join("\t")).join("\n")
+
+  navigator.clipboard.writeText(text)
+  showSuccess("Copied to clipboard")
+}
+```
+
+### Paste Functionality
+
+Paste data from clipboard into the table:
+
+```tsx
+const handlePaste = async () => {
+  try {
+    const text = await navigator.clipboard.readText()
+    const rows = text.split("\n")
+
+    const pastedData = rows.map((row) => row.split("\t"))
+
+    // Update table with pasted data
+    updateTableWithPastedData(pastedData)
+  } catch (error) {
+    showError("Failed to paste")
+  }
+}
+```
+
+### Bulk Update on Paste
+
+When pasting multiple values, trigger bulk update:
+
+```tsx
+const handlePaste = async () => {
+  const text = await navigator.clipboard.readText()
+  const pastedData = parseClipboardData(text)
+
+  <BaseTable
+    headers={headers}
+    items={items}
+    onBulkChange={(changes) => {
+      // Handle bulk paste
+      console.log(`Pasted ${changes.length} cells`)
+      saveBulk(changes.map((c) => c.itemUpdated))
+    }}
+  />
+}
+```
+
+### Keyboard Shortcuts
+
+```tsx
+useEffect(() => {
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === "c") {
+      handleCopy()
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === "v") {
+      handlePaste()
+    }
+  }
+
+  window.addEventListener("keydown", handleKeyDown)
+  return () => window.removeEventListener("keydown", handleKeyDown)
+}, [])
+```
+
+### Data Format
+
+Clipboard format should be tab-separated for columns and newline-separated for rows:
+
+```
+John	john@example.com	Developer
+Jane	jane@example.com	Designer
+```
+
+### Validation
+
+Validate pasted data before updating:
+
+```tsx
+const validatePastedData = (data: any[][]) => {
+  return data.every((row) => {
+    return row.every((cell) => {
+      // Validate cell value
+      return cell !== null && cell !== ""
+    })
+  })
+}
+```

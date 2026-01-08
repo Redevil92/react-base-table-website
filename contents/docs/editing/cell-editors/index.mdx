@@ -1,0 +1,73 @@
+---
+title: Cell Editors
+description: Comprehensive guide to available cell editors.
+keywords: ["cell editors", "text editor", "number editor", "select editor"]
+---
+
+## Cell Editors
+
+Three built-in editors handle different data types.
+
+### Editor Types
+
+<CardGrid>
+  <Card
+    subtitle="Type: string"
+    title="Text Editor"
+    description="Edit text values with built-in validation."
+    href="/docs/editing/cell-editors/text-editor"
+  />
+  <Card
+    subtitle="Type: number"
+    title="Number Editor"
+    description="Edit numeric values with number formatting."
+    href="/docs/editing/cell-editors/number-editor"
+  />
+  <Card
+    subtitle="Type: list"
+    title="Select Editor"
+    description="Choose from predefined options."
+    href="/docs/editing/cell-editors/select-editor"
+  />
+</CardGrid>
+
+### Quick Reference
+
+```tsx
+// Text Editor
+{
+  editOptions: {
+    editable: true,
+    type: "string",
+    defaultValue: "",
+  },
+}
+
+// Number Editor
+{
+  editOptions: {
+    editable: true,
+    type: "number",
+    defaultValue: 0,
+  },
+}
+
+// Select Editor
+{
+  editOptions: {
+    editable: true,
+    type: "list",
+    options: ["Option 1", "Option 2"],
+    defaultValue: "Option 1",
+  },
+}
+```
+
+### Common Features
+
+All editors support:
+
+- Required field validation
+- Conditional disabling
+- Default values
+- Custom styling

@@ -1,0 +1,86 @@
+---
+title: Linked Groups
+description: Connect multiple groups together for coordinated behavior.
+keywords: ["linked groups", "LinkedGroup", "master group", "group connection"]
+---
+
+## Linked Groups
+
+Link multiple groups together so they expand/collapse in coordination.
+
+### Configuration
+
+```tsx
+interface LinkedGroup {
+  masterGroupName: string
+  linkedGroupNames: string[]
+}
+
+;<BaseTable
+  headers={headers}
+  items={items}
+  groupBy="region"
+  linkedGroups={[
+    {
+      masterGroupName: "North America",
+      linkedGroupNames: ["USA", "Canada", "Mexico"],
+    },
+    {
+      masterGroupName: "Europe",
+      linkedGroupNames: ["UK", "Germany", "France"],
+    },
+  ]}
+/>
+```
+
+### Behavior
+
+When a master group is expanded/collapsed:
+
+- All linked groups follow the same state
+- Linked group names appear in the custom render callback
+
+### Using with Custom Render
+
+```tsx
+groupByCustomRender={(
+  groupBy,
+  value,
+  columnsCount,
+  isCollapsed,
+  onCollapseGroup,
+  filteredItemsInGroup,
+  masterGroupName,
+  linkedGroupNames
+) => {
+  const isMaster = linkedGroupNames && linkedGroupNames.length > 0
+  const isLinked = !!masterGroupName
+
+  return (
+    <tr onClick={() => onCollapseGroup(value)}>
+      <td colSpan={columnsCount}>
+        <span>{isCollapsed ? "▶" : "▼"}</span>
+        <strong>{value}</strong>
+
+        {isMaster && (
+          <span className="text-sm text-gray-500 ml-2">
+            (includes: {linkedGroupNames.join(", ")})
+          </span>
+        )}
+
+        {isLinked && (
+          <span className="text-sm text-gray-500 ml-2">
+            (part of {masterGroupName})
+          </span>
+        )}
+      </td>
+    </tr>
+  )
+}}
+```
+
+### Use Cases
+
+- **Regional hierarchies** - Countries linked under continents
+- **Category trees** - Subcategories linked under main categories
+- **Team structures** - Team members linked under departments

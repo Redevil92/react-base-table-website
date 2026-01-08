@@ -1,0 +1,758 @@
+---
+title: Props Reference
+description: Complete reference of all BaseTable props and their types.
+keywords: ["props", "reference", "API", "properties", "interface"]
+---
+
+## Props Reference
+
+Complete guide to all available props for the `BaseTable` component.
+
+---
+
+## Data Props
+
+These props define what data the table displays.
+
+### `headers` (Required)
+
+**Type:** `BaseTableHeader[]`
+
+Column definitions for the table. Each header describes a column's behavior, appearance, and editing capabilities.
+
+```tsx
+const headers: BaseTableHeader[] = [
+  {
+    id: "name",
+    text: "Name",
+    width: 200,
+    sortable: true,
+    hasFilter: true,
+  },
+]
+```
+
+**See also:** [Column Definition](/docs/column-definition)
+
+---
+
+### `items` (Required)
+
+**Type:** `TableItem[]`
+
+Array of data rows to display in the table. Each item is an object with properties matching header `id` values.
+
+```tsx
+const items = [
+  { id: 1, name: "John Doe", email: "john@example.com" },
+  { id: 2, name: "Jane Smith", email: "jane@example.com" },
+]
+```
+
+**See also:** [Data Binding](/docs/data-binding)
+
+---
+
+### `height` (Optional)
+
+**Type:** `string`
+
+Table container height. Can be any CSS height value (pixels, percentages, etc.).
+
+**Default:** `undefined` (auto-height)
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  height="400px"
+/>
+
+// or
+<BaseTable
+  headers={headers}
+  items={items}
+  height="100vh"
+/>
+```
+
+---
+
+## Feature Props
+
+These props enable and configure table features.
+
+### `groupBy` (Optional)
+
+**Type:** `string`
+
+Group rows by a column value. Pass the header `id` to group by that column.
+
+```tsx
+<BaseTable headers={headers} items={items} groupBy="department" />
+```
+
+**See also:** [Grouping](/docs/grouping)
+
+---
+
+### `linkedGroups` (Optional)
+
+**Type:** `LinkedGroup[]`
+
+Connect multiple groups together so they expand/collapse in coordination.
+
+```tsx
+linkedGroups={[
+  {
+    masterGroupName: "North America",
+    linkedGroupNames: ["USA", "Canada", "Mexico"],
+  },
+]}
+```
+
+**See also:** [Grouping](/docs/grouping)
+
+---
+
+### `highlightCondition` (Optional)
+
+**Type:** `HighlightCondition[]`
+
+Array of cell highlights with custom styling.
+
+```tsx
+highlightCondition={[
+  {
+    id: "highlight-1",
+    headerId: "status",
+    itemId: 1,
+    style: { backgroundColor: "#ffeb3b", color: "#000" },
+  },
+]}
+```
+
+**See also:** [Conditional Highlighting](/docs/conditional-highlighting)
+
+---
+
+### `comments` (Optional)
+
+**Type:** `CommentData[]`
+
+Array of cell comments for collaboration.
+
+```tsx
+comments={[
+  {
+    id: "comment-1",
+    headerId: "name",
+    itemId: 1,
+    text: "Need to verify this entry",
+    author: "john.doe",
+    timestamp: new Date(),
+  },
+]}
+```
+
+**See also:** [Comments](/docs/comments)
+
+---
+
+### `activeFilters` (Optional)
+
+**Type:** `ActiveTableFilter[]`
+
+Currently active column filters.
+
+```tsx
+activeFilters={[
+  {
+    headerId: "status",
+    values: ["Active", "Pending"],
+  },
+]}
+```
+
+**See also:** [Filtering](/docs/filtering)
+
+---
+
+### `advancedSettings` (Optional)
+
+**Type:** `AdvancedTableSettings`
+
+Fine-tune table behavior, appearance, and features.
+
+```tsx
+advancedSettings={{
+  showIndex: true,
+  enableRowDragDrop: true,
+  contrastRow: true,
+}}
+```
+
+**See:** [Advanced Settings Props](#advanced-settings-props) below
+
+---
+
+## Event Handler Props
+
+These props are callback functions that respond to user interactions.
+
+### `onChange` (Optional)
+
+**Type:** `(itemUpdated: T, originalIndex: number, fromArray?: object) => Promise<void> | void`
+
+Triggered when a single cell is edited.
+
+```tsx
+onChange={(updatedItem, originalIndex, fromArray) => {
+  console.log("Updated:", updatedItem)
+  console.log("At index:", originalIndex)
+
+  if (fromArray) {
+    console.log("Array field:", fromArray.headerId)
+  }
+}}
+```
+
+**See also:** [Single Cell Update](/docs/editing/single-cell-update)
+
+---
+
+### `onBulkChange` (Optional)
+
+**Type:** `(items: BulkChangeItem[], headerId?: string) => Promise<void> | void`
+
+Triggered when multiple cells across different columns are updated (e.g., paste operation).
+
+```tsx
+onBulkChange={(changes, headerId) => {
+  changes.forEach(({ itemUpdated, originalIndex }) => {
+    console.log(`Updated row ${originalIndex}:`, itemUpdated)
+  })
+}}
+```
+
+**See also:** [Bulk Update](/docs/editing/bulk-update)
+
+---
+
+### `onBulkFieldChange` (Optional)
+
+**Type:** `(items: FieldChangeItem[], headerId: string) => Promise<void> | void`
+
+Triggered when multiple rows in the same column are updated.
+
+```tsx
+onBulkFieldChange={(changes, headerId) => {
+  console.log(`Bulk update on column: ${headerId}`)
+  const newValues = changes.map(c => c.itemUpdated[headerId])
+}}
+```
+
+**See also:** [Bulk Update](/docs/editing/bulk-update)
+
+---
+
+### `onSetHighlightCondition` (Optional)
+
+**Type:** `(highlight: HighlightCondition, item: TableItem) => Promise<void> | void`
+
+Triggered when a user highlights a cell.
+
+```tsx
+onSetHighlightCondition={(highlight, item) => {
+  console.log("Highlight added:", highlight)
+  saveHighlight(highlight)
+}}
+```
+
+**See also:** [Conditional Highlighting](/docs/conditional-highlighting)
+
+---
+
+### `onRemoveHighlightCondition` (Optional)
+
+**Type:** `(highlight: HighlightCondition, cssProperty: string, item: TableItem) => Promise<void> | void`
+
+Triggered when a user removes a highlight.
+
+```tsx
+onRemoveHighlightCondition((highlight, cssProperty, item) => {
+  console.log(`Remove ${cssProperty} from highlight`)
+}}
+```
+
+**See also:** [Conditional Highlighting](/docs/conditional-highlighting)
+
+---
+
+### `onSaveComment` (Optional)
+
+**Type:** `(comment: CommentData, item: TableItem) => Promise<void> | void`
+
+Triggered when a comment is saved.
+
+```tsx
+onSaveComment={(comment, item) => {
+  console.log("Save comment:", comment)
+  saveCommentToDatabase(comment)
+}}
+```
+
+**See also:** [Comments](/docs/comments)
+
+---
+
+### `onDeleteComment` (Optional)
+
+**Type:** `(comment: CommentData, item: TableItem) => Promise<void> | void`
+
+Triggered when a comment is deleted.
+
+```tsx
+onDeleteComment={(comment, item) => {
+  console.log("Delete comment:", comment.id)
+  deleteCommentFromDatabase(comment.id)
+}}
+```
+
+**See also:** [Comments](/docs/comments)
+
+---
+
+### `onSortByColumn` (Optional)
+
+**Type:** `(columnId: string) => Promise<void> | void`
+
+Triggered when a user clicks a sortable column header.
+
+```tsx
+onSortByColumn={(columnId) => {
+  console.log(`Sort by: ${columnId}`)
+  setSortColumn(columnId)
+}}
+```
+
+**See also:** [Sorting](/docs/sorting)
+
+---
+
+### `onResetSort` (Optional)
+
+**Type:** `() => Promise<void> | void`
+
+Triggered when sorting is reset.
+
+```tsx
+onResetSort={() => {
+  console.log("Sort reset")
+  setSortColumn(null)
+}}
+```
+
+**See also:** [Sorting](/docs/sorting)
+
+---
+
+### `onRowDoubleClick` (Optional)
+
+**Type:** `(item: T) => Promise<void> | void`
+
+Triggered when a user double-clicks a row.
+
+```tsx
+onRowDoubleClick={(item) => {
+  console.log("Row double-clicked:", item)
+  openDetailModal(item)
+}}
+```
+
+**See also:** [Row Events](/docs/row-events)
+
+---
+
+### `onRowsReordered` (Optional)
+
+**Type:** `(fromIndex: number, toIndex: number) => Promise<void> | void`
+
+Triggered when rows are reordered via drag and drop.
+
+```tsx
+onRowsReordered={(fromIndex, toIndex) => {
+  const newItems = reorderArray(items, fromIndex, toIndex)
+  setItems(newItems)
+}}
+```
+
+**See also:** [Reorder Rows](/docs/editing/reorder-rows)
+
+---
+
+### `onAddListOption` (Optional)
+
+**Type:** `(newOption: string, header: BaseTableHeader) => Promise<void> | void`
+
+Triggered when a user adds a new option to a select/list column.
+
+```tsx
+onAddListOption={(newOption, header) => {
+  console.log(`Add "${newOption}" to column ${header.id}`)
+  addOptionToColumn(header.id, newOption)
+}}
+```
+
+**See also:** [Dynamic List Options](/docs/dynamic-list-options)
+
+---
+
+## Rendering Props
+
+These props customize how the table renders groups and allow custom headers.
+
+### `groupByCustomRender` (Optional)
+
+**Type:** `(groupBy, value, columnsCount, isCollapsed, onCollapseGroup, filteredItemsInGroup, masterGroupName, linkedGroupNames) => ReactNode`
+
+Custom render function for group headers.
+
+```tsx
+groupByCustomRender={(
+  groupBy,
+  value,
+  columnsCount,
+  isCollapsed,
+  onCollapseGroup,
+  filteredItemsInGroup,
+  masterGroupName,
+  linkedGroupNames
+) => (
+  <tr
+    onClick={() => onCollapseGroup(value)}
+    className="bg-gray-100 cursor-pointer"
+  >
+    <td colSpan={columnsCount}>
+      <span>{isCollapsed ? "▶" : "▼"}</span>
+      <strong>{value}</strong>
+      <span>({filteredItemsInGroup.length} items)</span>
+    </td>
+  </tr>
+)}
+```
+
+**See also:** [Custom Group Rendering](/docs/row-grouping/custom-group-rendering)
+
+---
+
+## Advanced Settings Props
+
+Configuration object for fine-tuning table behavior.
+
+### Structure
+
+```tsx
+advancedSettings={{
+  // Layout
+  marginTop?: string
+  noBorder?: boolean
+  pinColumns?: boolean
+  alignCenterInLine?: boolean
+  contrastRow?: boolean
+
+  // Display
+  showIndex?: boolean
+  showFooter?: boolean
+  focusedRowIndex?: number
+  showFlashOnCellUpdate?: boolean
+
+  // Sorting
+  currentSortId?: string
+  indexUseOriginalOrder?: boolean
+
+  // Interaction
+  enableRowDragDrop?: boolean
+
+  // Identity
+  rowIdProperty?: string
+  tableId?: string
+  currentUsername?: string
+
+  // List Options
+  selectNewOptionOnAdd?: boolean
+  canAddListOptions?: boolean
+
+  // Row Disabling
+  disabledRows?: {
+    property: string
+    values: string[] | number[] | boolean[]
+  }
+}}
+```
+
+### `marginTop`
+
+**Type:** `string`
+
+Top margin of the table container.
+
+```tsx
+advancedSettings={{ marginTop: "20px" }}
+```
+
+---
+
+### `noBorder`
+
+**Type:** `boolean`
+
+Remove table borders.
+
+```tsx
+advancedSettings={{ noBorder: true }}
+```
+
+---
+
+### `pinColumns`
+
+**Type:** `boolean`
+
+Pin columns to the left side during horizontal scrolling.
+
+```tsx
+advancedSettings={{ pinColumns: true }}
+```
+
+---
+
+### `alignCenterInLine`
+
+**Type:** `boolean`
+
+Center content vertically in cells.
+
+```tsx
+advancedSettings={{ alignCenterInLine: true }}
+```
+
+---
+
+### `currentSortId`
+
+**Type:** `string`
+
+Currently sorted column ID. Used to show sort indicator.
+
+```tsx
+advancedSettings={{ currentSortId: "name" }}
+```
+
+---
+
+### `contrastRow`
+
+**Type:** `boolean`
+
+Alternate row background colors for better readability.
+
+```tsx
+advancedSettings={{ contrastRow: true }}
+```
+
+---
+
+### `indexUseOriginalOrder`
+
+**Type:** `boolean`
+
+Show original row indices even when sorted/filtered.
+
+```tsx
+advancedSettings={{ indexUseOriginalOrder: true }}
+```
+
+---
+
+### `enableRowDragDrop`
+
+**Type:** `boolean`
+
+Enable row reordering via drag and drop.
+
+```tsx
+advancedSettings={{ enableRowDragDrop: true }}
+```
+
+---
+
+### `currentUsername`
+
+**Type:** `string`
+
+Current user's name for comment attribution.
+
+```tsx
+advancedSettings={{ currentUsername: "john.doe" }}
+```
+
+---
+
+### `showIndex`
+
+**Type:** `boolean`
+
+Display row numbers in the first column.
+
+```tsx
+advancedSettings={{ showIndex: true }}
+```
+
+---
+
+### `selectNewOptionOnAdd`
+
+**Type:** `boolean`
+
+Auto-select newly added options in list columns.
+
+```tsx
+advancedSettings={{ selectNewOptionOnAdd: true }}
+```
+
+---
+
+### `canAddListOptions`
+
+**Type:** `boolean`
+
+Allow adding new options to list-type columns.
+
+```tsx
+advancedSettings={{ canAddListOptions: true }}
+```
+
+---
+
+### `showFooter`
+
+**Type:** `boolean`
+
+Display a footer row at the bottom of the table.
+
+```tsx
+advancedSettings={{ showFooter: true }}
+```
+
+---
+
+### `rowIdProperty`
+
+**Type:** `string`
+
+**Default:** `"id"`
+
+Property name to use as unique row identifier.
+
+```tsx
+advancedSettings={{ rowIdProperty: "userId" }}
+```
+
+---
+
+### `tableId`
+
+**Type:** `string`
+
+Unique identifier for the table instance.
+
+```tsx
+advancedSettings={{ tableId: "products-table" }}
+```
+
+---
+
+### `focusedRowIndex`
+
+**Type:** `number`
+
+Row index to highlight/focus (0-based).
+
+```tsx
+advancedSettings={{ focusedRowIndex: 0 }}
+```
+
+---
+
+### `showFlashOnCellUpdate`
+
+**Type:** `boolean`
+
+Show flash animation when a cell value is updated.
+
+```tsx
+advancedSettings={{ showFlashOnCellUpdate: true }}
+```
+
+---
+
+### `disabledRows`
+
+**Type:** `{ property: string; values: string[] | number[] | boolean[] }`
+
+Disable rows based on property values. Disabled rows cannot be edited or dragged.
+
+```tsx
+advancedSettings={{
+  disabledRows: {
+    property: "status",
+    values: ["completed", "archived"],
+  },
+}}
+
+// or
+
+advancedSettings={{
+  disabledRows: {
+    property: "locked",
+    values: [true],
+  },
+}}
+```
+
+---
+
+## Summary
+
+| Category      | Props                                                                                                                                                                                                                                   |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Data**      | `headers`, `items`, `height`                                                                                                                                                                                                            |
+| **Features**  | `groupBy`, `linkedGroups`, `highlightCondition`, `comments`, `activeFilters`, `advancedSettings`                                                                                                                                        |
+| **Events**    | `onChange`, `onBulkChange`, `onBulkFieldChange`, `onSetHighlightCondition`, `onRemoveHighlightCondition`, `onSaveComment`, `onDeleteComment`, `onSortByColumn`, `onResetSort`, `onRowDoubleClick`, `onRowsReordered`, `onAddListOption` |
+| **Rendering** | `groupByCustomRender`                                                                                                                                                                                                                   |
+
+---
+
+## Next Steps
+
+<CardGrid>
+  <Card
+    subtitle="Getting Started"
+    title="Core Features Overview"
+    description="Understand what features are available."
+    href="/docs/core-features-overview"
+  />
+  <Card
+    subtitle="Guide"
+    title="Column Definition"
+    description="Configure your columns with BaseTableHeader."
+    href="/docs/column-definition"
+  />
+  <Card
+    subtitle="Guide"
+    title="Advanced Settings"
+    description="Fine-tune table behavior."
+    href="/docs/advanced-settings"
+  />
+</CardGrid>

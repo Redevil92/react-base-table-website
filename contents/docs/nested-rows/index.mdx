@@ -1,0 +1,116 @@
+---
+title: Nested Rows
+description: Display hierarchical data with nested rows.
+keywords: ["nested rows", "hierarchy", "tree", "parent-child"]
+---
+
+## Nested Rows
+
+Display hierarchical data structures with parent-child relationships.
+
+### Data Structure
+
+```tsx
+const items = [
+  {
+    id: 1,
+    name: "Engineering",
+    children: [
+      { id: 1.1, name: "John Doe", level: 2 },
+      { id: 1.2, name: "Jane Smith", level: 2 },
+    ],
+  },
+  {
+    id: 2,
+    name: "Sales",
+    children: [
+      { id: 2.1, name: "Bob Johnson", level: 2 },
+      { id: 2.2, name: "Alice Brown", level: 2 },
+    ],
+  },
+]
+```
+
+### Implementation
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  advancedSettings={{
+    enableRowExpand: true, // Enable row expansion
+  }}
+/>
+```
+
+### Expand/Collapse
+
+Control which rows are expanded:
+
+```tsx
+const [expandedRows, setExpandedRows] = useState<(string | number)[]>([])
+
+<BaseTable
+  headers={headers}
+  items={items}
+  expandedRowKeys={expandedRows}
+  onExpandedRowsChange={setExpandedRows}
+/>
+```
+
+### Custom Row Rendering
+
+Customize how nested rows appear:
+
+```tsx
+const headers: BaseTableHeader[] = [
+  {
+    id: "name",
+    text: "Name",
+    customRender: (item, header, fromArrayData, isDisabled) => {
+      const indent = (item.level - 1) * 20
+      return (
+        <div style={{ paddingLeft: `${indent}px` }}>
+          {item.children && (
+            <span onClick={() => toggleExpand(item.id)}>
+              {isExpanded ? "▼" : "▶"}
+            </span>
+          )}
+          {item.name}
+        </div>
+      )
+    },
+  },
+]
+```
+
+### Multi-level Nesting
+
+Support multiple levels of nesting:
+
+```tsx
+const items = [
+  {
+    id: 1,
+    name: "Company",
+    children: [
+      {
+        id: 1.1,
+        name: "Engineering",
+        children: [
+          { id: 1.1.1, name: "Backend Team" },
+          { id: 1.1.2, name: "Frontend Team" },
+        ],
+      },
+      { id: 1.2, name: "Sales" },
+    ],
+  },
+]
+```
+
+### Use Cases
+
+- **Organizational hierarchy** - Company > Department > Team > Person
+- **Product categories** - Category > Subcategory > Product > SKU
+- **File structure** - Folder > Subfolder > File
+- **Task management** - Epic > Story > Task > Subtask

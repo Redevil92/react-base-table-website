@@ -1,0 +1,89 @@
+---
+title: Quick Start
+description: Get up and running with react-base-table in minutes.
+keywords: ["quick start", "getting started", "tutorial", "react-base-table"]
+---
+
+## Installation
+
+Install the package via npm or yarn:
+
+```bash
+npm install react-base-table
+```
+
+or
+
+```bash
+yarn add react-base-table
+```
+
+---
+
+## Usage
+
+Import the `BaseTable` component and its CSS:
+
+```tsx
+import BaseTable from "react-base-table"
+import type { BaseTableHeader, TableItem } from "react-base-table"
+import "react-base-table/styles.css"
+```
+
+### Basic Example
+
+```tsx
+const headers: BaseTableHeader[] = [
+  { id: "name", text: "Name", width: 200 },
+  { id: "email", text: "Email", width: 300 },
+  { id: "role", text: "Role", width: 150 },
+]
+
+const items: TableItem[] = [
+  { id: 1, name: "John Doe", email: "john@example.com", role: "Developer" },
+  { id: 2, name: "Jane Smith", email: "jane@example.com", role: "Designer" },
+  { id: 3, name: "Bob Johnson", email: "bob@example.com", role: "Manager" },
+]
+
+function App() {
+  return <BaseTable headers={headers} items={items} height="400px" />
+}
+```
+
+### Required Props
+
+| Prop      | Type                | Description          |
+| --------- | ------------------- | -------------------- |
+| `headers` | `BaseTableHeader[]` | Column definitions   |
+| `items`   | `TableItem[]`       | Data rows to display |
+
+### Optional Props
+
+| Prop               | Type                    | Description                               |
+| ------------------ | ----------------------- | ----------------------------------------- |
+| `height`           | `string`                | Table height (e.g., `"400px"`, `"100vh"`) |
+| `advancedSettings` | `AdvancedTableSettings` | Fine-tune table behavior                  |
+| `onChange`         | `function`              | Handle cell value changes                 |
+
+## Next Steps
+
+<CardGrid>
+  <Card
+    subtitle="Core"
+    title="Column Definition"
+    description="Learn how to configure columns with types, filtering, and custom rendering."
+    href="/docs/column-definition"
+  />
+  <Card
+    subtitle="Core"
+    title="Editing Capabilities"
+    description="Enable inline editing with validation and change handlers."
+    href="/docs/editing-capabilities"
+  />
+  <Card
+    subtitle="Organization"
+    title="Grouping"
+    description="Group rows by column values with expandable sections."
+    href="/docs/grouping"
+  />
+</CardGrid>

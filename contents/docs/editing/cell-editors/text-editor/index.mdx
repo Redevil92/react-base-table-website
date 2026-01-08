@@ -1,0 +1,59 @@
+---
+title: Text Editor
+description: Edit string values with the text editor.
+keywords: ["text editor", "string", "input", "text input"]
+---
+
+## Text Editor
+
+The text editor handles string values with optional validation.
+
+### Configuration
+
+```tsx
+{
+  id: "name",
+  text: "Name",
+  editOptions: {
+    editable: true,
+    type: "string",
+    defaultValue: "",
+    required: true,
+  },
+}
+```
+
+### Properties
+
+| Property        | Type       | Description                   |
+| --------------- | ---------- | ----------------------------- |
+| `type`          | `"string"` | Editor type                   |
+| `defaultValue`  | `string`   | Default value for empty cells |
+| `required`      | `boolean`  | Field is required             |
+| `isDisabled`    | `function` | Conditionally disable         |
+| `notApplicable` | `function` | Mark as N/A                   |
+
+### Validation
+
+```tsx
+editOptions: {
+  editable: true,
+  type: "string",
+  isDisabled: (item) => item.locked === true,
+}
+```
+
+### Example
+
+```tsx
+{
+  id: "email",
+  text: "Email",
+  editOptions: {
+    editable: true,
+    type: "string",
+    required: true,
+    isDisabled: (item) => item.readonly === true,
+  },
+}
+```

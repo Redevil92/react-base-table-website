@@ -1,0 +1,109 @@
+---
+title: Dynamic List Options
+description: Allow users to add new options to list-type columns.
+keywords: ["dynamic options", "onAddListOption", "canAddNewOption", "dropdown"]
+---
+
+## Dynamic List Options
+
+Let users add new options to dropdown columns on the fly.
+
+### Enable Dynamic Options
+
+1. Set `canAddNewOption: true` on the header
+2. Handle `onAddListOption` callback
+
+```tsx
+const [headers, setHeaders] = useState<BaseTableHeader[]>([
+  {
+    id: "category",
+    text: "Category",
+    editOptions: {
+      editable: true,
+      type: "list",
+      options: ["Electronics", "Clothing", "Food"],
+      canAddNewOption: true,
+    },
+  },
+])
+
+<BaseTable
+  headers={headers}
+  items={items}
+  advancedSettings={{
+    canAddListOptions: true,
+    selectNewOptionOnAdd: true,  // Auto-select new option
+  }}
+  onAddListOption={(newOption, header) => {
+    console.log(`Adding "${newOption}" to ${header.id}`)
+
+    // Update header options
+    setHeaders((prev) =>
+      prev.map((h) => {
+        if (h.id === header.id && h.editOptions) {
+          return {
+            ...h,
+            editOptions: {
+              ...h.editOptions,
+              options: [...(h.editOptions.options || []), newOption],
+            },
+          }
+        }
+        return h
+      })
+    )
+  }}
+/>
+```
+
+### onAddListOption Parameters
+
+| Parameter   | Type              | Description                 |
+| ----------- | ----------------- | --------------------------- |
+| `newOption` | `string`          | The new option value to add |
+| `header`    | `BaseTableHeader` | The column configuration    |
+
+### Advanced Settings
+
+| Setting                | Type      | Description                              |
+| ---------------------- | --------- | ---------------------------------------- |
+| `canAddListOptions`    | `boolean` | Global enable/disable for adding options |
+| `selectNewOptionOnAdd` | `boolean` | Auto-select the new option after adding  |
+
+### Persisting Options
+
+Save new options to your database:
+
+```tsx
+onAddListOption={async (newOption, header) => {
+  // Save to database
+  await saveColumnOption(header.id, newOption)
+
+  // Update local state
+  updateHeaderOptions(header.id, newOption)
+}}
+```
+
+### Validation
+
+Validate new options before adding:
+
+```tsx
+onAddListOption={(newOption, header) => {
+  // Check for duplicates
+  const existingOptions = header.editOptions?.options || []
+  if (existingOptions.includes(newOption)) {
+    showError("Option already exists")
+    return
+  }
+
+  // Check length
+  if (newOption.length < 2) {
+    showError("Option must be at least 2 characters")
+    return
+  }
+
+  // Add the option
+  addOption(header.id, newOption)
+}}
+```

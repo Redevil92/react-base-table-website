@@ -1,0 +1,62 @@
+---
+title: Highlight and Comments
+description: Add collaborative features with highlighting and comments.
+keywords: ["highlight", "comments", "collaboration", "annotations"]
+---
+
+## Highlight and Comments
+
+Add collaborative features to your table with cell highlighting and comments.
+
+### Highlighting
+
+Highlight cells based on conditions:
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  highlightCondition={[
+    {
+      id: "highlight-1",
+      headerId: "status",
+      itemId: 1,
+      style: { backgroundColor: "#ffeb3b", color: "#000" },
+    },
+  ]}
+  onSetHighlightCondition={(highlight, item) => {
+    console.log("Add highlight:", highlight)
+  }}
+/>
+```
+
+### Comments
+
+Add notes to cells for team collaboration:
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  comments={comments}
+  advancedSettings={{
+    currentUsername: "john.doe",
+  }}
+  onSaveComment={(comment, item) => {
+    console.log("Save comment:", comment)
+  }}
+  onDeleteComment={(comment, item) => {
+    console.log("Delete comment:", comment)
+  }}
+/>
+```
+
+### Use Cases
+
+- **Highlighting** - Flag items for review, mark errors, track priorities
+- **Comments** - Leave notes for team members, explain changes, ask questions
+
+### Learn More
+
+- [Conditional Highlighting](/docs/conditional-highlighting)
+- [Comments](/docs/comments)

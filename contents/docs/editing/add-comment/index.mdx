@@ -1,0 +1,103 @@
+---
+title: Add a Comment
+description: Add collaborative comments to cells.
+keywords: ["comments", "collaboration", "notes", "annotations"]
+---
+
+## Add a Comment
+
+Enable users to leave notes on cells for team collaboration.
+
+### Enable Comments
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  comments={comments}
+  advancedSettings={{
+    currentUsername: "john.doe",
+  }}
+  onSaveComment={(comment, item) => {
+    // Save comment to database
+    saveComment(comment)
+  }}
+/>
+```
+
+### Comment Structure
+
+```tsx
+interface CommentData {
+  id: string
+  headerId: string // Column ID
+  itemId: string | number // Row ID
+  text: string // Comment content
+  author: string // Who wrote it
+  timestamp: Date // When it was written
+}
+```
+
+### Example
+
+```tsx
+const [comments, setComments] = useState<CommentData[]>([])
+
+<BaseTable
+  headers={headers}
+  items={items}
+  comments={comments}
+  advancedSettings={{
+    currentUsername: currentUser.name,
+  }}
+  onSaveComment={async (comment, item) => {
+    try {
+      const savedComment = await saveCommentToDatabase(comment)
+      setComments([...comments, savedComment])
+      showSuccess("Comment saved")
+    } catch (error) {
+      showError("Failed to save comment")
+    }
+  }}
+/>
+```
+
+### Manage Comments
+
+Track and manage comments:
+
+```tsx
+const getCommentsForCell = (headerId: string, itemId: string | number) => {
+  return comments.filter((c) => c.headerId === headerId && c.itemId === itemId)
+}
+
+const deleteComment = async (commentId: string) => {
+  await deleteCommentFromDatabase(commentId)
+  setComments(comments.filter((c) => c.id !== commentId))
+}
+```
+
+### Real-time Collaboration
+
+For real-time updates, integrate with WebSocket:
+
+```tsx
+useEffect(() => {
+  const ws = new WebSocket("wss://your-server/comments")
+
+  ws.onmessage = (event) => {
+    const newComment = JSON.parse(event.data)
+    setComments((prev) => [...prev, newComment])
+  }
+
+  return () => ws.close()
+}, [])
+```
+
+### Comment Indicators
+
+Show visual indicators for cells with comments:
+
+- Small icon in cell corner
+- Hover tooltip with preview
+- Click to open comment thread

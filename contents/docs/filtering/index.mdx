@@ -1,0 +1,97 @@
+---
+title: Filtering
+description: Configure column filters with activeFilters.
+keywords: ["filtering", "activeFilters", "hasFilter", "ActiveTableFilter"]
+---
+
+## Filtering
+
+Enable column filtering to let users narrow down data.
+
+### Enable Filters
+
+Add `hasFilter: true` to your headers:
+
+```tsx
+const headers: BaseTableHeader[] = [
+  {
+    id: "status",
+    text: "Status",
+    hasFilter: true,
+  },
+  {
+    id: "department",
+    text: "Department",
+    hasFilter: true,
+  },
+]
+```
+
+### Active Filters
+
+Pass current filter state with `activeFilters`:
+
+```tsx
+interface ActiveTableFilter {
+  headerId: string
+  values: string[]
+}
+
+;<BaseTable
+  headers={headers}
+  items={items}
+  activeFilters={[
+    {
+      headerId: "status",
+      values: ["Active", "Pending"],
+    },
+    {
+      headerId: "department",
+      values: ["Engineering"],
+    },
+  ]}
+/>
+```
+
+### Managing Filter State
+
+```tsx
+const [filters, setFilters] = useState<ActiveTableFilter[]>([])
+
+const handleFilterChange = (headerId: string, values: string[]) => {
+  setFilters((prev) => {
+    const existing = prev.filter((f) => f.headerId !== headerId)
+    if (values.length > 0) {
+      return [...existing, { headerId, values }]
+    }
+    return existing
+  })
+}
+
+;<BaseTable headers={headers} items={items} activeFilters={filters} />
+```
+
+### Filter with List Columns
+
+Combine filtering with list-type columns for dropdown filters:
+
+```tsx
+{
+  id: "status",
+  text: "Status",
+  hasFilter: true,
+  editOptions: {
+    editable: true,
+    type: "list",
+    options: ["Active", "Pending", "Inactive"],
+  },
+}
+```
+
+### Performance Considerations
+
+For large datasets:
+
+- Filter data on the server side
+- Use debounced filter updates
+- Consider virtual scrolling with filtered results

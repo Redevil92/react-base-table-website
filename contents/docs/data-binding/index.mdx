@@ -1,0 +1,81 @@
+---
+title: Data Binding
+description: Learn how to bind data to your table with items and TableItem.
+keywords: ["data binding", "items", "TableItem", "data structure"]
+---
+
+## Data Binding
+
+The `items` prop accepts an array of `TableItem` objects that represent your table rows.
+
+### Basic Data Structure
+
+Each item should have properties matching your header `id` values:
+
+```tsx
+const headers: BaseTableHeader[] = [
+  { id: "name", text: "Name" },
+  { id: "email", text: "Email" },
+]
+
+const items: TableItem[] = [
+  { name: "John Doe", email: "john@example.com" },
+  { name: "Jane Smith", email: "jane@example.com" },
+]
+```
+
+### Row Identification
+
+For features like editing, reordering, and highlighting, each row needs a unique identifier. Configure this with `rowIdProperty` in advanced settings:
+
+```tsx
+const items = [
+  { id: 1, name: "John Doe" },
+  { id: 2, name: "Jane Smith" },
+]
+
+<BaseTable
+  headers={headers}
+  items={items}
+  advancedSettings={{
+    rowIdProperty: "id",  // Use "id" field as unique identifier
+  }}
+/>
+```
+
+### Array Data (fromArray)
+
+For columns that display data from nested arrays, use the `fromArray` property:
+
+```tsx
+const headers: BaseTableHeader[] = [
+  { id: "name", text: "Name" },
+  {
+    id: "score",
+    text: "Score",
+    fromArray: "scores", // Data comes from item.scores[]
+  },
+]
+
+const items = [
+  {
+    name: "John",
+    scores: [{ score: 95 }, { score: 87 }, { score: 92 }],
+  },
+]
+```
+
+### Original Index Tracking
+
+When filtering or sorting, the table tracks original indices. Use `indexUseOriginalOrder` to display original positions:
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  advancedSettings={{
+    showIndex: true,
+    indexUseOriginalOrder: true,
+  }}
+/>
+```

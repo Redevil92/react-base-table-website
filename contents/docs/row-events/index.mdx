@@ -1,0 +1,100 @@
+---
+title: Row Events
+description: Handle row interactions like double-click events.
+keywords: ["row events", "onRowDoubleClick", "row interaction", "click handler"]
+---
+
+## Row Events
+
+Respond to user interactions on table rows.
+
+### Double-Click Handler
+
+Open a detail view or edit mode on row double-click:
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  onRowDoubleClick={(item) => {
+    console.log("Double-clicked row:", item)
+
+    // Open detail modal
+    setSelectedItem(item)
+    setModalOpen(true)
+  }}
+/>
+```
+
+### Example: Edit Modal
+
+```tsx
+const [editingItem, setEditingItem] = useState(null)
+
+<BaseTable
+  headers={headers}
+  items={items}
+  onRowDoubleClick={(item) => setEditingItem(item)}
+/>
+
+{editingItem && (
+  <EditModal
+    item={editingItem}
+    onSave={(updated) => {
+      updateItem(updated)
+      setEditingItem(null)
+    }}
+    onClose={() => setEditingItem(null)}
+  />
+)}
+```
+
+### Example: Navigate to Detail Page
+
+```tsx
+import { useRouter } from "next/navigation"
+
+const router = useRouter()
+
+<BaseTable
+  headers={headers}
+  items={items}
+  onRowDoubleClick={(item) => {
+    router.push(`/items/${item.id}`)
+  }}
+/>
+```
+
+### Focused Row
+
+Track which row has focus with `focusedRowIndex`:
+
+```tsx
+const [focusedRow, setFocusedRow] = useState<number | null>(null)
+
+<BaseTable
+  headers={headers}
+  items={items}
+  advancedSettings={{
+    focusedRowIndex: focusedRow,
+  }}
+/>
+```
+
+### Combining with Highlighting
+
+Highlight the focused row:
+
+```tsx
+const highlightConditions =
+  focusedRow !== null
+    ? [
+        {
+          id: "focus",
+          headerId: "*", // All columns
+          itemId: items[focusedRow].id,
+          style: { backgroundColor: "#e3f2fd" },
+        },
+      ]
+    : []
+```

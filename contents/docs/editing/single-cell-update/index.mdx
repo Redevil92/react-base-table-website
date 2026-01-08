@@ -1,0 +1,68 @@
+---
+title: Single Cell Update
+description: Edit and update individual cells in the table.
+keywords: ["single cell", "update", "edit cell", "cell modification"]
+---
+
+## Single Cell Update
+
+Update individual cells with the `onChange` callback.
+
+### How It Works
+
+1. User clicks a cell and edits the value
+2. The table detects the change
+3. `onChange` callback is triggered
+4. You update your state/database
+5. Table re-renders with new value
+
+### Implementation
+
+```tsx
+const [items, setItems] = useState(initialData)
+
+<BaseTable
+  headers={headers}
+  items={items}
+  onChange={(updatedItem, originalIndex) => {
+    // Update the specific item
+    const newItems = [...items]
+    newItems[originalIndex] = updatedItem
+    setItems(newItems)
+
+    // Optionally save to database
+    saveItem(updatedItem)
+  }}
+/>
+```
+
+### onChange Parameters
+
+| Parameter       | Type        | Description                 |
+| --------------- | ----------- | --------------------------- |
+| `itemUpdated`   | `TableItem` | The updated item            |
+| `originalIndex` | `number`    | Position in items array     |
+| `fromArray`     | `object`    | Array field info (optional) |
+
+### Example
+
+```tsx
+onChange={(updatedItem, originalIndex, fromArray) => {
+  console.log("Updated item:", updatedItem)
+  console.log("Original index:", originalIndex)
+
+  if (fromArray) {
+    console.log("Array field updated:", fromArray.headerId)
+  }
+
+  // Handle the update
+  updateItem(updatedItem)
+}}
+```
+
+### Best Practices
+
+- **Validate** before saving
+- **Provide feedback** to user (loading state, toast notification)
+- **Handle errors** gracefully
+- **Debounce** rapid updates

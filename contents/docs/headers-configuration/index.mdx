@@ -1,0 +1,75 @@
+---
+title: Headers Configuration
+description: Learn how to configure table columns with BaseTableHeader.
+keywords: ["headers", "columns", "configuration", "BaseTableHeader"]
+---
+
+## Headers Configuration
+
+Headers define the structure and behavior of your table columns. Each header is configured using the `BaseTableHeader` interface.
+
+### Basic Header
+
+```tsx
+const headers: BaseTableHeader[] = [
+  {
+    id: "name", // Unique identifier, matches data property
+    text: "Name", // Display text in column header
+    width: 200, // Column width in pixels
+  },
+]
+```
+
+### Header Properties
+
+| Property       | Type                            | Default      | Description                              |
+| -------------- | ------------------------------- | ------------ | ---------------------------------------- |
+| `id`           | `string`                        | **required** | Unique identifier matching data property |
+| `text`         | `string`                        | **required** | Display text for column header           |
+| `width`        | `number`                        | auto         | Column width in pixels                   |
+| `align`        | `"left" \| "center" \| "right"` | `"left"`     | Text alignment                           |
+| `hasFilter`    | `boolean`                       | `false`      | Enable column filtering                  |
+| `sortable`     | `boolean`                       | `false`      | Enable column sorting                    |
+| `children`     | `BaseTableHeader[]`             | -            | Nested column groups                     |
+| `fromArray`    | `string`                        | -            | Property name for array data             |
+| `editOptions`  | `object`                        | -            | Inline editing configuration             |
+| `customHeader` | `function`                      | -            | Custom header renderer                   |
+| `customRender` | `function`                      | -            | Custom cell renderer                     |
+| `customSort`   | `function`                      | -            | Custom sort function                     |
+
+### Example with All Options
+
+```tsx
+const headers: BaseTableHeader[] = [
+  {
+    id: "status",
+    text: "Status",
+    width: 120,
+    align: "center",
+    hasFilter: true,
+    sortable: true,
+    editOptions: {
+      editable: true,
+      type: "list",
+      options: ["Active", "Pending", "Inactive"],
+    },
+  },
+]
+```
+
+## Next Steps
+
+<CardGrid>
+  <Card
+    subtitle="Headers"
+    title="Column Types"
+    description="Learn about string, number, and list column types."
+    href="/docs/headers-configuration/column-types"
+  />
+  <Card
+    subtitle="Headers"
+    title="Custom Rendering"
+    description="Create custom header and cell renderers."
+    href="/docs/headers-configuration/custom-rendering"
+  />
+</CardGrid>

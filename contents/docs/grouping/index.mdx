@@ -1,0 +1,106 @@
+---
+title: Grouping
+description: Group rows by column values with expandable sections.
+keywords: ["grouping", "groups", "organization", "expandable rows"]
+---
+
+## Grouping
+
+Organize data into expandable groups based on column values.
+
+### Basic Grouping
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  groupBy="department" // Group by this column
+  height="400px"
+/>
+```
+
+### How It Works
+
+Rows are automatically grouped by the specified column value:
+
+```
+▼ Engineering
+  - John Doe
+  - Jane Smith
+▼ Sales
+  - Bob Johnson
+  - Alice Brown
+```
+
+### Custom Group Headers
+
+Customize how group headers appear:
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  groupBy="department"
+  groupByCustomRender={(
+    groupBy,
+    value,
+    columnsCount,
+    isCollapsed,
+    onCollapseGroup,
+    filteredItemsInGroup,
+    masterGroupName,
+    linkedGroupNames
+  ) => (
+    <tr
+      className="cursor-pointer bg-gray-100"
+      onClick={() => onCollapseGroup(value)}
+    >
+      <td colSpan={columnsCount}>
+        <span>{isCollapsed ? "▶" : "▼"}</span>
+        <strong>{value}</strong>
+        <span>({filteredItemsInGroup.length} items)</span>
+      </td>
+    </tr>
+  )}
+/>
+```
+
+### Group Aggregations
+
+Calculate totals or counts within groups:
+
+```tsx
+const totalAmount = filteredItemsInGroup.reduce(
+  (sum, item) => sum + item.amount,
+  0
+)
+
+const statusCounts = filteredItemsInGroup.reduce((acc, item) => {
+  acc[item.status] = (acc[item.status] || 0) + 1
+  return acc
+}, {})
+```
+
+### Linked Groups
+
+Connect multiple groups together:
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  groupBy="region"
+  linkedGroups={[
+    {
+      masterGroupName: "North America",
+      linkedGroupNames: ["USA", "Canada", "Mexico"],
+    },
+    {
+      masterGroupName: "Europe",
+      linkedGroupNames: ["UK", "Germany", "France"],
+    },
+  ]}
+/>
+```
+
+When a master group expands/collapses, linked groups follow.

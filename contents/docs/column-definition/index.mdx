@@ -1,0 +1,76 @@
+---
+title: Column Definition
+description: Learn how to define and configure table columns.
+keywords: ["columns", "headers", "column definition", "BaseTableHeader"]
+---
+
+## Column Definition
+
+Columns are defined using the `BaseTableHeader` interface. Each column controls how data is displayed and edited.
+
+### Basic Column
+
+```tsx
+{
+  id: "name",        // Unique identifier matching data property
+  text: "Name",      // Display text in header
+  width: 200,        // Column width in pixels
+}
+```
+
+### Full Configuration
+
+```tsx
+{
+  id: "status",
+  text: "Status",
+  width: 150,
+  align: "center",           // Text alignment
+  sortable: true,            // Enable sorting
+  hasFilter: true,           // Enable filtering
+  editOptions: {
+    editable: true,
+    type: "list",
+    options: ["Active", "Inactive"],
+  },
+  customRender: (item, header) => (
+    <span className="badge">{item[header.id]}</span>
+  ),
+}
+```
+
+### Column Properties
+
+| Property       | Type                            | Description                      |
+| -------------- | ------------------------------- | -------------------------------- |
+| `id`           | `string`                        | Unique ID matching data property |
+| `text`         | `string`                        | Header display text              |
+| `width`        | `number`                        | Column width in pixels           |
+| `align`        | `"left" \| "center" \| "right"` | Text alignment                   |
+| `sortable`     | `boolean`                       | Enable column sorting            |
+| `hasFilter`    | `boolean`                       | Enable column filtering          |
+| `editOptions`  | `EditOptions`                   | Cell editing configuration       |
+| `customRender` | `function`                      | Custom cell rendering            |
+| `customHeader` | `function`                      | Custom header rendering          |
+| `children`     | `BaseTableHeader[]`             | Nested column groups             |
+
+### Nested Columns
+
+```tsx
+{
+  id: "details",
+  text: "Details",
+  children: [
+    { id: "firstName", text: "First Name", width: 150 },
+    { id: "lastName", text: "Last Name", width: 150 },
+  ],
+}
+```
+
+### Column Types
+
+Columns support different data types:
+
+- **String** - Text values
+- **Number** - Numeric values
+- **List** - Dropdown selections

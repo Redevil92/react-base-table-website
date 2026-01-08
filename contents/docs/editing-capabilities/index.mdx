@@ -1,0 +1,86 @@
+---
+title: Editing Capabilities
+description: Overview of all editing features in react-base-table.
+keywords: ["editing", "capabilities", "inline editing", "features"]
+---
+
+## Editing Capabilities
+
+react-base-table provides comprehensive editing features for data manipulation.
+
+### Editing Features
+
+| Feature                | Description                                      |
+| ---------------------- | ------------------------------------------------ |
+| **Cell Editors**       | Edit individual cells with different field types |
+| **Single Cell Update** | Modify one cell at a time                        |
+| **Bulk Update**        | Change multiple cells simultaneously             |
+| **Delete**             | Remove rows from the table                       |
+| **Copy & Paste**       | Clipboard support for fast data entry            |
+| **Reorder Rows**       | Drag and drop to reorganize                      |
+
+### Quick Start
+
+Enable editing on a column:
+
+```tsx
+{
+  id: "name",
+  text: "Name",
+  editOptions: {
+    editable: true,
+    type: "string",
+  },
+}
+```
+
+Handle changes:
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  onChange={(updatedItem, originalIndex) => {
+    // Update your state or database
+    updateItem(updatedItem)
+  }}
+/>
+```
+
+### Validation
+
+Add validation with `isDisabled` and `notApplicable`:
+
+```tsx
+editOptions: {
+  editable: true,
+  type: "number",
+  isDisabled: (item) => item.locked === true,
+  notApplicable: (item) => item.type === "service",
+}
+```
+
+### Learn More
+
+Explore each editing feature in detail:
+
+<CardGrid>
+  <Card
+    subtitle="Editors"
+    title="Cell Editors"
+    description="Text, number, and select editors."
+    href="/docs/editing/cell-editors"
+  />
+  <Card
+    subtitle="Operations"
+    title="Single Cell Update"
+    description="Update one cell at a time."
+    href="/docs/editing/single-cell-update"
+  />
+  <Card
+    subtitle="Operations"
+    title="Bulk Update"
+    description="Change multiple cells at once."
+    href="/docs/editing/bulk-update"
+  />
+</CardGrid>

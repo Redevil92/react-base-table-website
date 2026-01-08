@@ -1,0 +1,85 @@
+---
+title: Bulk Changes
+description: Handle multiple cell changes efficiently with bulk operations.
+keywords: ["bulk changes", "onBulkChange", "onBulkFieldChange", "batch update"]
+---
+
+## Bulk Changes
+
+When multiple cells change simultaneously (e.g., paste operations, bulk edits), use bulk change handlers for better performance.
+
+### onBulkChange
+
+Handles multiple item changes across different columns:
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  onBulkChange={(changes, headerId) => {
+    changes.forEach(
+      ({ itemUpdated, originalIndex, fromArrayItemsAffected }) => {
+        console.log(`Item at index ${originalIndex} updated:`, itemUpdated)
+
+        if (fromArrayItemsAffected.length > 0) {
+          console.log("Array items affected:", fromArrayItemsAffected)
+        }
+      }
+    )
+
+    // Batch update your state/database
+    updateItems(changes.map((c) => c.itemUpdated))
+  }}
+/>
+```
+
+### onBulkChange Parameters
+
+```tsx
+onBulkChange: (
+  items: {
+    itemUpdated: T
+    originalIndex: number
+    fromArrayItemsAffected: { fromArrayIndex: number; headerId: string }[]
+  }[],
+  headerId?: string
+) => Promise<void> | void
+```
+
+| Parameter  | Description                                      |
+| ---------- | ------------------------------------------------ |
+| `items`    | Array of changes with updated items and indices  |
+| `headerId` | Column ID if bulk change is on a specific column |
+
+### onBulkFieldChange
+
+Optimized handler for changes to a single column across multiple rows:
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  onBulkFieldChange={(changes, headerId) => {
+    console.log(`Bulk update on column: ${headerId}`)
+
+    changes.forEach(({ itemUpdated, originalIndex }) => {
+      console.log(`Row ${originalIndex}: ${itemUpdated[headerId]}`)
+    })
+  }}
+/>
+```
+
+### Use Cases
+
+| Scenario                  | Handler             |
+| ------------------------- | ------------------- |
+| Paste from clipboard      | `onBulkChange`      |
+| Select all + change value | `onBulkFieldChange` |
+| Copy column values        | `onBulkFieldChange` |
+| Multi-row edit            | `onBulkChange`      |
+
+### Performance Tips
+
+1. **Batch database updates** - Combine multiple changes into a single API call
+2. **Debounce state updates** - Avoid re-rendering on every keystroke
+3. **Use transactions** - Wrap bulk changes in database transactions

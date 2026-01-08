@@ -1,0 +1,83 @@
+---
+title: Column Types
+description: Understanding the different column types in react-base-table.
+keywords: ["column types", "string", "number", "list", "TableHeaderType"]
+---
+
+## Column Types
+
+react-base-table supports three column types defined in `TableHeaderType`:
+
+```tsx
+const TableHeaderType = {
+  STRING: "string",
+  LIST: "list",
+  NUMBER: "number",
+} as const
+```
+
+### String Type
+
+Default type for text-based columns. Renders as a text input when editable.
+
+```tsx
+{
+  id: "name",
+  text: "Name",
+  editOptions: {
+    editable: true,
+    type: "string",
+    defaultValue: "",
+  },
+}
+```
+
+### Number Type
+
+For numeric values. Renders as a number input with validation.
+
+```tsx
+{
+  id: "quantity",
+  text: "Quantity",
+  align: "right",
+  editOptions: {
+    editable: true,
+    type: "number",
+    defaultValue: 0,
+  },
+}
+```
+
+### List Type
+
+For dropdown/select values. Requires an `options` array.
+
+```tsx
+{
+  id: "status",
+  text: "Status",
+  editOptions: {
+    editable: true,
+    type: "list",
+    options: ["Active", "Pending", "Inactive"],
+    defaultValue: "Pending",
+    canAddNewOption: true,  // Allow adding new options dynamically
+  },
+}
+```
+
+### Dynamic Options
+
+When `canAddNewOption` is `true`, users can add new options. Handle the event with `onAddListOption`:
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  onAddListOption={(newOption, header) => {
+    // Add the new option to your state/database
+    console.log(`Added "${newOption}" to column "${header.id}"`)
+  }}
+/>
+```

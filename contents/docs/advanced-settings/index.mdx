@@ -1,0 +1,110 @@
+---
+title: Advanced Settings
+description: Fine-tune table behavior with AdvancedTableSettings.
+keywords:
+  ["advanced settings", "AdvancedTableSettings", "configuration", "options"]
+---
+
+## Advanced Settings
+
+Configure advanced table behavior with the `advancedSettings` prop.
+
+### Full Interface
+
+```tsx
+interface AdvancedTableSettings {
+  marginTop?: string
+  noBorder?: boolean
+  pinColumns?: boolean
+  alignCenterInLine?: boolean
+  currentSortId?: string
+  contrastRow?: boolean
+  indexUseOriginalOrder?: boolean
+  enableRowDragDrop?: boolean
+  currentUsername?: string
+  showIndex?: boolean
+  selectNewOptionOnAdd?: boolean
+  canAddListOptions?: boolean
+  showFooter?: boolean
+  rowIdProperty?: string
+  tableId?: string
+  focusedRowIndex?: number
+  showFlashOnCellUpdate?: boolean
+  disabledRows?: {
+    property: string
+    values: string[] | number[] | boolean[]
+  }
+}
+```
+
+### Layout Settings
+
+| Setting             | Type      | Default | Description                   |
+| ------------------- | --------- | ------- | ----------------------------- |
+| `marginTop`         | `string`  | -       | Top margin (e.g., `"20px"`)   |
+| `noBorder`          | `boolean` | `false` | Remove table borders          |
+| `pinColumns`        | `boolean` | `false` | Pin columns to left on scroll |
+| `alignCenterInLine` | `boolean` | `false` | Center content vertically     |
+| `contrastRow`       | `boolean` | `false` | Alternate row colors          |
+| `showIndex`         | `boolean` | `false` | Show row numbers              |
+| `showFooter`        | `boolean` | `false` | Display table footer          |
+
+### Behavior Settings
+
+| Setting                 | Type      | Default | Description                       |
+| ----------------------- | --------- | ------- | --------------------------------- |
+| `currentSortId`         | `string`  | -       | Currently sorted column           |
+| `enableRowDragDrop`     | `boolean` | `false` | Enable row reordering             |
+| `indexUseOriginalOrder` | `boolean` | `false` | Show original indices when sorted |
+| `focusedRowIndex`       | `number`  | -       | Highlight specific row            |
+| `showFlashOnCellUpdate` | `boolean` | `false` | Flash animation on cell update    |
+
+### Identity Settings
+
+| Setting           | Type     | Default | Description               |
+| ----------------- | -------- | ------- | ------------------------- |
+| `rowIdProperty`   | `string` | `"id"`  | Property to use as row ID |
+| `tableId`         | `string` | -       | Unique table identifier   |
+| `currentUsername` | `string` | -       | Current user for comments |
+
+### List Options Settings
+
+| Setting                | Type      | Default | Description                   |
+| ---------------------- | --------- | ------- | ----------------------------- |
+| `canAddListOptions`    | `boolean` | `false` | Allow adding new list options |
+| `selectNewOptionOnAdd` | `boolean` | `false` | Auto-select new options       |
+
+### Disabled Rows
+
+Disable specific rows based on property values:
+
+```tsx
+advancedSettings={{
+  disabledRows: {
+    property: "status",
+    values: ["completed", "cancelled"],
+  },
+}}
+```
+
+### Example Configuration
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  advancedSettings={{
+    showIndex: true,
+    contrastRow: true,
+    pinColumns: true,
+    enableRowDragDrop: true,
+    showFlashOnCellUpdate: true,
+    rowIdProperty: "id",
+    currentUsername: "john.doe",
+    disabledRows: {
+      property: "locked",
+      values: [true],
+    },
+  }}
+/>
+```

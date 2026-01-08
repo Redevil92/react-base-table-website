@@ -1,0 +1,102 @@
+---
+title: Edit Options
+description: Deep dive into cell edit options configuration.
+keywords:
+  ["edit options", "editable", "validation", "isDisabled", "notApplicable"]
+---
+
+## Edit Options
+
+The `editOptions` object controls how cells can be edited.
+
+### Complete Example
+
+```tsx
+{
+  id: "quantity",
+  text: "Quantity",
+  editOptions: {
+    editable: true,
+    type: "number",
+    defaultValue: 1,
+    required: true,
+    greyedOutIfNotEditable: true,
+    isDisabled: (item, fromArrayData) => {
+      return item.status === "completed"
+    },
+    notApplicable: (item, fromArrayData) => {
+      return item.type === "service"
+    },
+  },
+}
+```
+
+### isDisabled Function
+
+Dynamically disable editing based on row data:
+
+```tsx
+isDisabled: (item: TableItem, fromArrayData?: { index: number }) => boolean
+```
+
+**Use cases:**
+
+- Disable editing for completed items
+- Disable based on user permissions
+- Disable specific array indices
+
+```tsx
+isDisabled: (item, fromArrayData) => {
+  // Disable if item is locked
+  if (item.locked) return true
+
+  // Disable first item in array
+  if (fromArrayData?.index === 0) return true
+
+  return false
+}
+```
+
+### notApplicable Function
+
+Mark cells as "N/A" when the field doesn't apply:
+
+```tsx
+notApplicable: (item: TableItem, fromArrayData?: { index: number }) => boolean
+```
+
+```tsx
+notApplicable: (item) => {
+  // Quantity doesn't apply to services
+  return item.type === "service"
+}
+```
+
+### Visual Indicators
+
+| Option                         | Effect                         |
+| ------------------------------ | ------------------------------ |
+| `greyedOutIfNotEditable: true` | Dims non-editable cells        |
+| `required: true`               | Shows required field indicator |
+
+### Default Values
+
+Set default values for new or empty cells:
+
+```tsx
+editOptions: {
+  type: "string",
+  defaultValue: "New Item",
+}
+
+editOptions: {
+  type: "number",
+  defaultValue: 0,
+}
+
+editOptions: {
+  type: "list",
+  options: ["Draft", "Published"],
+  defaultValue: "Draft",
+}
+```

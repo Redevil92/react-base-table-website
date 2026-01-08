@@ -1,0 +1,89 @@
+---
+title: Basic Table
+description: Create your first react-base-table with columns and data.
+keywords: ["basic", "tutorial", "getting started", "simple table"]
+---
+
+## Basic Table Tutorial
+
+Learn how to create a simple table with columns and display data.
+
+### Live Example
+
+<BasicTableExample />
+
+### Step 1: Import Dependencies
+
+```tsx
+import BaseTable from "react-base-table"
+import type { BaseTableHeader, TableItem } from "react-base-table"
+```
+
+### Step 2: Define Columns
+
+```tsx
+const headers: BaseTableHeader[] = [
+  {
+    id: "name",
+    text: "Name",
+    width: 200,
+  },
+  {
+    id: "email",
+    text: "Email",
+    width: 300,
+  },
+  {
+    id: "role",
+    text: "Role",
+    width: 150,
+  },
+]
+```
+
+### Step 3: Prepare Data
+
+```tsx
+const items: TableItem[] = [
+  { id: 1, name: "John Doe", email: "john@example.com", role: "Developer" },
+  { id: 2, name: "Jane Smith", email: "jane@example.com", role: "Designer" },
+  { id: 3, name: "Bob Johnson", email: "bob@example.com", role: "Manager" },
+]
+```
+
+### Step 4: Render the Table
+
+```tsx
+function BasicTableExample() {
+  return <BaseTable headers={headers} items={items} height="400px" />
+}
+```
+
+### Complete Example
+
+```tsx
+import BaseTable from "react-base-table"
+import type { BaseTableHeader, TableItem } from "react-base-table"
+
+export default function BasicTableExample() {
+  const headers: BaseTableHeader[] = [
+    { id: "name", text: "Name", width: 200 },
+    { id: "email", text: "Email", width: 300 },
+    { id: "role", text: "Role", width: 150 },
+  ]
+
+  const items: TableItem[] = [
+    { id: 1, name: "John Doe", email: "john@example.com", role: "Developer" },
+    { id: 2, name: "Jane Smith", email: "jane@example.com", role: "Designer" },
+    { id: 3, name: "Bob Johnson", email: "bob@example.com", role: "Manager" },
+  ]
+
+  return <BaseTable headers={headers} items={items} height="400px" />
+}
+```
+
+### Next Steps
+
+- Enable sorting with `sortable: true`
+- Add filtering with `hasFilter: true`
+- Enable cell editing with `editOptions`

@@ -1,0 +1,82 @@
+---
+title: Editing Overview
+description: Understand how editing works in react-base-table.
+keywords: ["overview", "editing system", "concepts", "workflow"]
+---
+
+## Editing Overview
+
+The editing system allows users to modify data directly in the table with built-in validation and persistence.
+
+### How Editing Works
+
+```tsx
+// 1. Define editable columns
+const headers: BaseTableHeader[] = [
+  {
+    id: "name",
+    text: "Name",
+    editOptions: {
+      editable: true,
+      type: "string",
+    },
+  },
+]
+
+// 2. Handle changes
+<BaseTable
+  headers={headers}
+  items={items}
+  onChange={(updatedItem, originalIndex) => {
+    // 3. Validate and persist
+    updateItem(updatedItem)
+  }}
+/>
+```
+
+### Edit Options
+
+Configure editing per column:
+
+```tsx
+editOptions: {
+  editable: true,              // Enable editing
+  type: "string",              // Editor type
+  required: true,              // Field required
+  isDisabled: (item) => {},    // Conditional disable
+  notApplicable: (item) => {}, // Mark as N/A
+}
+```
+
+### Editor Types
+
+- **String** - Text input editor
+- **Number** - Numeric input editor
+- **List** - Dropdown/select editor
+
+### Change Events
+
+The table triggers different callbacks based on the scope:
+
+| Callback            | Use Case                     |
+| ------------------- | ---------------------------- |
+| `onChange`          | Single cell updated          |
+| `onBulkChange`      | Multiple cells updated       |
+| `onBulkFieldChange` | Multiple rows in same column |
+
+### Validation
+
+Control when cells can be edited:
+
+```tsx
+isDisabled: (item, fromArrayData) => item.locked === true
+notApplicable: (item) => item.type === "service"
+```
+
+### Related Features
+
+- Cell Editors
+- Single Cell Update
+- Bulk Update
+- Copy & Paste
+- Context Menu

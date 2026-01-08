@@ -1,0 +1,329 @@
+---
+title: Editable Table
+description: Enable inline editing with different column types, cell highlighting, and comments.
+keywords:
+  [
+    "editable",
+    "tutorial",
+    "inline editing",
+    "cell editors",
+    "highlights",
+    "comments",
+  ]
+---
+
+## Editable Table Tutorial
+
+Learn how to enable inline cell editing with various field types, cell highlighting, and comments.
+
+### Live Example
+
+Try it out! Click any cell to edit. Right-click for highlight and comment options.
+
+<EditableTableExample />
+
+### Step 1: Define Editable Headers
+
+```tsx
+const headers: BaseTableHeader[] = [
+  {
+    id: "name",
+    text: "Name",
+    width: 200,
+    editOptions: {
+      editable: true,
+      type: "string",
+    },
+  },
+  {
+    id: "quantity",
+    text: "Quantity",
+    width: 150,
+    editOptions: {
+      editable: true,
+      type: "number",
+    },
+  },
+  {
+    id: "status",
+    text: "Status",
+    width: 150,
+    editOptions: {
+      editable: true,
+      type: "list",
+      options: ["In Stock", "Low Stock", "Out of Stock"],
+    },
+  },
+]
+```
+
+### Step 2: Prepare Data
+
+```tsx
+const items = [
+  { id: 1, name: "Product A", quantity: 10, status: "In Stock" },
+  { id: 2, name: "Product B", quantity: 0, status: "Out of Stock" },
+]
+```
+
+### Step 3: Handle Changes
+
+```tsx
+const [tableItems, setTableItems] = useState(items)
+
+// Single cell change
+const handleChange = (updatedItem, originalIndex) => {
+  const newItems = [...tableItems]
+  newItems[originalIndex] = updatedItem
+  setTableItems(newItems)
+}
+
+// Bulk changes across columns (e.g., paste operation)
+const handleBulkChange = (changes) => {
+  setTableItems((prev) => {
+    const newItems = [...prev]
+    changes.forEach(({ itemUpdated, originalIndex }) => {
+      newItems[originalIndex] = itemUpdated
+    })
+    return newItems
+  })
+}
+
+// Bulk changes in same column
+const handleBulkFieldChange = (changes, headerId) => {
+  setTableItems((prev) => {
+    const newItems = [...prev]
+    changes.forEach(({ itemUpdated, originalIndex }) => {
+      newItems[originalIndex] = {
+        ...newItems[originalIndex],
+        [headerId]: itemUpdated[headerId],
+      }
+    })
+    return newItems
+  })
+};
+
+....
+
+<BaseTable
+  headers={headers}
+  items={tableItems}
+  onChange={handleChange}
+  onBulkChange={handleBulkChange}
+  onBulkFieldChange={handleBulkFieldChange}
+  height="400px"
+/>
+```
+
+### Step 4: Add Cell Highlighting
+
+Highlights use `propertyId` and `value` to identify the row:
+
+```tsx
+import { HighlightCondition } from "react-base-data-table"
+
+const [highlights, setHighlights] = useState<HighlightCondition[]>([
+  {
+    propertyId: "id",
+    value: 2,
+    style: { backgroundColor: "#ffcdd2" }, // Red for out of stock
+  },
+])
+
+const handleSetHighlight = (highlight: HighlightCondition) => {
+  setHighlights((prev) => {
+    const existingIndex = prev.findIndex(
+      (h) =>
+        h.propertyId === highlight.propertyId && h.value === highlight.value
+    )
+    if (existingIndex >= 0) {
+      const updated = [...prev]
+      updated[existingIndex] = highlight
+      return updated
+    }
+    return [...prev, highlight]
+  })
+}
+
+const handleRemoveHighlight = (
+  highlight: HighlightCondition,
+  cssProperty: string
+) => {
+  setHighlights((prev) => {
+    const existingIndex = prev.findIndex(
+      (h) =>
+        h.propertyId === highlight.propertyId && h.value === highlight.value
+    )
+    if (existingIndex >= 0) {
+      const updated = [...prev]
+      const existingHighlight = { ...updated[existingIndex] }
+      if (existingHighlight.style) {
+        const newStyle = { ...existingHighlight.style }
+        delete newStyle[cssProperty]
+        if (Object.keys(newStyle).length === 0) {
+          updated.splice(existingIndex, 1)
+        } else {
+          existingHighlight.style = newStyle
+          updated[existingIndex] = existingHighlight
+        }
+      }
+      return updated
+    }
+    return prev
+  })
+}
+
+;<BaseTable
+  headers={headers}
+  items={tableItems}
+  highlightCondition={highlights}
+  onSetHighlightCondition={handleSetHighlight}
+  onRemoveHighlightCondition={handleRemoveHighlight}
+/>
+```
+
+### Step 5: Add Cell Comments
+
+Comments use `propertyId`, `value`, and `columnId` to identify the cell:
+
+```tsx
+import { CommentData } from "react-base-data-table"
+
+const [comments, setComments] = useState<CommentData[]>([
+  {
+    commentId: 1,
+    propertyId: "id",
+    value: 2,
+    columnId: "quantity",
+    text: "Need to reorder ASAP",
+    author: "John Smith",
+    date: new Date(),
+  },
+])
+
+const handleSaveComment = (comment: CommentData, item) => {
+  setComments((prev) => {
+    const existingIndex = prev.findIndex(
+      (c) =>
+        c.propertyId === comment.propertyId &&
+        c.value === comment.value &&
+        c.columnId === comment.columnId
+    )
+    if (existingIndex >= 0) {
+      const updated = [...prev]
+      updated[existingIndex] = comment
+      return updated
+    }
+    return [...prev, comment]
+  })
+}
+
+const handleDeleteComment = (comment: CommentData, item) => {
+  setComments((prev) => prev.filter((c) => c.commentId !== comment.commentId))
+}
+
+;<BaseTable
+  headers={headers}
+  items={tableItems}
+  comments={comments}
+  onSaveComment={handleSaveComment}
+  onDeleteComment={handleDeleteComment}
+  advancedSettings={{
+    currentUsername: "Demo User",
+  }}
+/>
+```
+
+### Complete Example
+
+```tsx
+import { useState } from "react"
+import {
+  BaseTable,
+  BaseTableHeader,
+  CommentData,
+  HighlightCondition,
+} from "react-base-data-table"
+
+export default function EditableTableExample() {
+  const [items, setItems] = useState([
+    { id: 1, name: "Product A", quantity: 10, status: "In Stock" },
+    { id: 2, name: "Product B", quantity: 0, status: "Out of Stock" },
+  ])
+  const [highlights, setHighlights] = useState<HighlightCondition[]>([])
+  const [comments, setComments] = useState<CommentData[]>([])
+
+  const headers: BaseTableHeader[] = [
+    {
+      id: "name",
+      text: "Name",
+      width: 200,
+      editOptions: { editable: true, type: "string" },
+    },
+    {
+      id: "quantity",
+      text: "Quantity",
+      width: 150,
+      editOptions: { editable: true, type: "number" },
+    },
+    {
+      id: "status",
+      text: "Status",
+      width: 150,
+      editOptions: {
+        editable: true,
+        type: "list",
+        options: ["In Stock", "Low Stock", "Out of Stock"],
+      },
+    },
+  ]
+
+  return (
+    <BaseTable
+      headers={headers}
+      items={items}
+      height="400px"
+      onChange={(updatedItem, originalIndex) => {
+        const newItems = [...items]
+        newItems[originalIndex] = updatedItem
+        setItems(newItems)
+      }}
+      onBulkChange={(changes) => {
+        setItems((prev) => {
+          const newItems = [...prev]
+          changes.forEach(({ itemUpdated, originalIndex }) => {
+            newItems[originalIndex] = itemUpdated
+          })
+          return newItems
+        })
+      }}
+      highlightCondition={highlights}
+      onSetHighlightCondition={(highlight) =>
+        setHighlights((prev) => [...prev, highlight])
+      }
+      onRemoveHighlightCondition={(highlight) =>
+        setHighlights((prev) => prev.filter((h) => h.value !== highlight.value))
+      }
+      comments={comments}
+      onSaveComment={(comment) => setComments((prev) => [...prev, comment])}
+      onDeleteComment={(comment) =>
+        setComments((prev) =>
+          prev.filter((c) => c.commentId !== comment.commentId)
+        )
+      }
+      advancedSettings={{
+        showIndex: true,
+        contrastRow: true,
+        currentUsername: "Demo User",
+        showFlashOnCellUpdate: true,
+      }}
+    />
+  )
+}
+```
+
+### Next Steps
+
+- Learn about cell editors
+- Handle bulk updates
+- Add validation to cells

@@ -1,0 +1,90 @@
+---
+title: Cell Editing
+description: Enable inline cell editing with validation and change handlers.
+keywords: ["cell editing", "inline editing", "onChange", "editOptions"]
+---
+
+## Cell Editing
+
+Enable inline editing by configuring `editOptions` on your headers and handling changes with the `onChange` callback.
+
+### Enabling Editing
+
+```tsx
+const headers: BaseTableHeader[] = [
+  {
+    id: "name",
+    text: "Name",
+    editOptions: {
+      editable: true,
+      type: "string",
+    },
+  },
+]
+
+<BaseTable
+  headers={headers}
+  items={items}
+  onChange={(updatedItem, originalIndex, fromArray) => {
+    console.log("Item updated:", updatedItem)
+    console.log("Original index:", originalIndex)
+    // Update your state/database
+  }}
+/>
+```
+
+### onChange Callback
+
+| Parameter       | Type                           | Description                          |
+| --------------- | ------------------------------ | ------------------------------------ |
+| `itemUpdated`   | `T`                            | The updated item with new values     |
+| `originalIndex` | `number`                       | Original position in the items array |
+| `fromArray`     | `{ fromArrayIndex, headerId }` | For array field changes              |
+
+### Edit Options Reference
+
+| Property                 | Type                             | Description                             |
+| ------------------------ | -------------------------------- | --------------------------------------- |
+| `editable`               | `boolean`                        | Enable/disable editing                  |
+| `type`                   | `"string" \| "number" \| "list"` | Input type                              |
+| `options`                | `string[]`                       | Options for list type                   |
+| `defaultValue`           | `string \| number`               | Default value for new items             |
+| `required`               | `boolean`                        | Mark field as required                  |
+| `isDisabled`             | `function`                       | Dynamically disable based on row data   |
+| `notApplicable`          | `function`                       | Mark cell as N/A based on row data      |
+| `greyedOutIfNotEditable` | `boolean`                        | Visual indicator for non-editable cells |
+| `canAddNewOption`        | `boolean`                        | Allow adding options to list type       |
+
+### Conditional Editing
+
+Disable editing for specific rows based on data:
+
+```tsx
+{
+  id: "status",
+  text: "Status",
+  editOptions: {
+    editable: true,
+    type: "list",
+    options: ["Active", "Inactive"],
+    isDisabled: (item) => item.locked === true,
+  },
+}
+```
+
+## Next Steps
+
+<CardGrid>
+  <Card
+    subtitle="Editing"
+    title="Edit Options"
+    description="Deep dive into all edit option configurations."
+    href="/docs/cell-editing/edit-options"
+  />
+  <Card
+    subtitle="Editing"
+    title="Bulk Changes"
+    description="Handle multiple cell changes efficiently."
+    href="/docs/cell-editing/bulk-changes"
+  />
+</CardGrid>

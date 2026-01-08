@@ -15,7 +15,7 @@ export default function RightSideBar({ slug, title }: SideBarEdit) {
 
   return (
     <div className="flex flex-col gap-3 pl-2">
-      <h3 className="text-sm font-semibold">Content</h3>
+      {/* <h3 className="text-sm font-semibold">Content</h3>
       <div className="flex flex-col gap-2">
         <Link
           href={feedbackUrl}
@@ -37,7 +37,7 @@ export default function RightSideBar({ slug, title }: SideBarEdit) {
         >
           <LuArrowUpRight className="mr-1 inline-block h-4 w-4" /> Edit page
         </Link>
-      </div>
+      </div> */}
     </div>
   )
 }

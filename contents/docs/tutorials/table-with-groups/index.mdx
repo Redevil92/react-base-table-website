@@ -1,0 +1,130 @@
+---
+title: Table with Groups
+description: Group rows by column values with expandable sections.
+keywords: ["grouping", "tutorial", "organize data", "expandable"]
+---
+
+## Table with Groups Tutorial
+
+Learn how to organize data into expandable groups.
+
+### Live Example
+
+<GroupedTableExample />
+
+### Step 1: Prepare Grouped Data
+
+```tsx
+const items = [
+  { id: 1, name: "John", department: "Engineering" },
+  { id: 2, name: "Jane", department: "Engineering" },
+  { id: 3, name: "Bob", department: "Design" },
+  { id: 4, name: "Alice", department: "Design" },
+]
+```
+
+### Step 2: Define Headers
+
+```tsx
+const headers: BaseTableHeader[] = [
+  {
+    id: "name",
+    text: "Name",
+    width: 200,
+  },
+  {
+    id: "department",
+    text: "Department",
+    width: 200,
+  },
+]
+```
+
+### Step 3: Enable Grouping
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  groupBy="department"
+  height="400px"
+/>
+```
+
+### Step 4: Custom Group Headers (Optional)
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  groupBy="department"
+  groupByCustomRender={(
+    groupBy,
+    value,
+    columnsCount,
+    isCollapsed,
+    onCollapseGroup,
+    filteredItemsInGroup
+  ) => (
+    <tr
+      className="cursor-pointer bg-gray-100 hover:bg-gray-200"
+      onClick={() => onCollapseGroup(value)}
+    >
+      <td colSpan={columnsCount} className="p-3">
+        <span>{isCollapsed ? "▶" : "▼"}</span>
+        <strong className="ml-2">{value}</strong>
+        <span className="ml-2 text-gray-500">
+          ({filteredItemsInGroup.length} items)
+        </span>
+      </td>
+    </tr>
+  )}
+  height="400px"
+/>
+```
+
+### Complete Example
+
+```tsx
+import BaseTable from "react-base-table"
+import type { BaseTableHeader } from "react-base-table"
+
+export default function GroupedTableExample() {
+  const headers: BaseTableHeader[] = [
+    { id: "name", text: "Name", width: 200 },
+    { id: "department", text: "Department", width: 200 },
+  ]
+
+  const items = [
+    { id: 1, name: "John", department: "Engineering" },
+    { id: 2, name: "Jane", department: "Engineering" },
+    { id: 3, name: "Bob", department: "Design" },
+    { id: 4, name: "Alice", department: "Design" },
+  ]
+
+  return (
+    <BaseTable
+      headers={headers}
+      items={items}
+      groupBy="department"
+      height="400px"
+    />
+  )
+}
+```
+
+### Result
+
+```
+▼ Design
+  - Alice
+  - Bob
+▼ Engineering
+  - Jane
+  - John
+```
+
+### Next Steps
+
+- Customize group headers with `groupByCustomRender`
+- Link multiple groups with `linkedGroups`

@@ -1,0 +1,125 @@
+---
+title: Highlight a Cell
+description: Conditionally highlight cells for visual emphasis.
+keywords: ["highlight", "conditional", "styling", "cell highlighting"]
+---
+
+## Highlight a Cell
+
+Apply conditional styling to cells for visual organization.
+
+### Basic Highlighting
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  highlightCondition={[
+    {
+      id: "highlight-1",
+      headerId: "status",
+      itemId: 1,
+      style: { backgroundColor: "#ffeb3b", color: "#000" },
+    },
+  ]}
+/>
+```
+
+### HighlightCondition Structure
+
+```tsx
+interface HighlightCondition {
+  id: string // Unique highlight ID
+  headerId: string // Column ID
+  itemId: string | number // Row ID
+  style: CSSProperties // CSS to apply
+}
+```
+
+### Set Highlight
+
+Allow users to highlight cells:
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  highlightCondition={highlights}
+  onSetHighlightCondition={(highlight, item) => {
+    // Add highlight
+    const newHighlights = [...highlights, highlight]
+    setHighlights(newHighlights)
+    saveHighlight(highlight)
+  }}
+/>
+```
+
+### Remove Highlight
+
+Remove highlights from cells:
+
+```tsx
+onRemoveHighlightCondition={(highlight, cssProperty, item) => {
+  // Remove specific CSS property
+  const updated = {
+    ...highlight,
+    style: { ...highlight.style },
+  }
+  delete updated.style[cssProperty]
+
+  const newHighlights = highlights.map((h) =>
+    h.id === highlight.id ? updated : h
+  )
+  setHighlights(newHighlights)
+}}
+```
+
+### Common Highlight Colors
+
+```tsx
+// Warning
+{ backgroundColor: "#fff3cd", color: "#856404" }
+
+// Error
+{ backgroundColor: "#f8d7da", color: "#721c24" }
+
+// Success
+{ backgroundColor: "#d4edda", color: "#155724" }
+
+// Info
+{ backgroundColor: "#cce5ff", color: "#004085" }
+```
+
+### Example: Priority Highlighting
+
+```tsx
+const getPriorityColor = (priority: string) => {
+  const colors: Record<string, CSSProperties> = {
+    high: { backgroundColor: "#f8d7da", color: "#721c24" },
+    medium: { backgroundColor: "#fff3cd", color: "#856404" },
+    low: { backgroundColor: "#d4edda", color: "#155724" },
+  }
+  return colors[priority] || {}
+}
+
+// Apply highlights based on data
+const highlights = items
+  .filter((item) => item.priority === "high")
+  .map((item, i) => ({
+    id: `priority-${item.id}`,
+    headerId: "status",
+    itemId: item.id,
+    style: getPriorityColor(item.priority),
+  }))
+```
+
+### Persist Highlights
+
+Save highlight state:
+
+```tsx
+onSetHighlightCondition={async (highlight, item) => {
+  await saveHighlight(highlight)
+  setHighlights([...highlights, highlight])
+}}
+```

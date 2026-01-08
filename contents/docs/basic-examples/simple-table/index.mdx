@@ -1,0 +1,41 @@
+---
+title: Simple Table
+description: Learn how to create a basic table with react-base-table.
+keywords: ["simple", "table", "basic", "react-base-table"]
+---
+
+## Simple Table
+
+A simple example showing how to render a basic table with `react-base-table`.
+
+### Example
+
+```tsx
+import BaseTable, { Column } from "react-base-table"
+
+import "react-base-table/styles.css"
+
+const data = [
+  { id: 1, name: "John Doe", email: "john@example.com", role: "Developer" },
+  { id: 2, name: "Jane Smith", email: "jane@example.com", role: "Designer" },
+  { id: 3, name: "Bob Johnson", email: "bob@example.com", role: "Manager" },
+]
+
+function SimpleTable() {
+  return (
+    <BaseTable data={data} width={800} height={400}>
+      <Column key="name" dataKey="name" title="Name" width={200} />
+      <Column key="email" dataKey="email" title="Email" width={300} />
+      <Column key="role" dataKey="role" title="Role" width={200} />
+    </BaseTable>
+  )
+}
+
+export default SimpleTable
+```
+
+### Key Points
+
+- **data**: Array of objects representing your table rows
+- **width/height**: Required dimensions for the table container
+- **Column**: Define each column with `dataKey` matching your data properties

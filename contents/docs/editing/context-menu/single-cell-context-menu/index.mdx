@@ -1,0 +1,87 @@
+---
+title: Single Cell Context Menu
+description: Right-click menu for individual cells.
+keywords: ["context menu", "single cell", "right-click", "cell actions"]
+---
+
+## Single Cell Context Menu
+
+Right-click on a cell to see actions for that cell.
+
+### Implementation
+
+```tsx
+const handleCellContextMenu = (e: React.MouseEvent, cell: any) => {
+  e.preventDefault()
+
+  // Show context menu at mouse position
+  showContextMenu({
+    x: e.clientX,
+    y: e.clientY,
+    items: [
+      { label: "Edit", onClick: () => editCell(cell) },
+      { label: "Copy", onClick: () => copyCell(cell) },
+      { label: "Cut", onClick: () => cutCell(cell) },
+      { divider: true },
+      { label: "Delete", onClick: () => deleteCell(cell) },
+      { divider: true },
+      { label: "Add comment", onClick: () => addComment(cell) },
+      { label: "Highlight", onClick: () => highlightCell(cell) },
+    ],
+  })
+}
+```
+
+### Available Actions
+
+| Action    | Description                  |
+| --------- | ---------------------------- |
+| Edit      | Enter edit mode for cell     |
+| Copy      | Copy cell value to clipboard |
+| Cut       | Copy and mark for deletion   |
+| Paste     | Paste clipboard content      |
+| Delete    | Clear cell value             |
+| Comment   | Add/edit comment             |
+| Highlight | Apply highlight              |
+| Format    | Change cell formatting       |
+
+### Example Menu
+
+```tsx
+const cellContextMenuItems = [
+  {
+    label: "Edit",
+    icon: "pencil",
+    onClick: () => enterEditMode(),
+  },
+  {
+    label: "Copy",
+    shortcut: "⌘C",
+    onClick: () => copyCellValue(),
+  },
+  {
+    divider: true,
+  },
+  {
+    label: "Clear",
+    icon: "trash",
+    onClick: () => clearCell(),
+  },
+  {
+    divider: true,
+  },
+  {
+    label: "Highlight",
+    submenu: [
+      { label: "Red", onClick: () => highlight("red") },
+      { label: "Yellow", onClick: () => highlight("yellow") },
+      { label: "Green", onClick: () => highlight("green") },
+    ],
+  },
+  {
+    label: "Add comment",
+    icon: "comment",
+    onClick: () => openCommentDialog(),
+  },
+]
+```

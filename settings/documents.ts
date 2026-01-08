@@ -1,50 +1,136 @@
 import { Paths } from "@/lib/pageroutes"
 
 export const Documents: Paths[] = [
+  // Getting Started
   {
-    heading: "Introduction",
-    title: "Basic Setup",
-    href: "/basic-setup",
+    heading: "Getting Started",
+    title: "Quick Start",
+    href: "/quick-start",
+  },
+  {
+    title: "Core Features Overview",
+    href: "/core-features-overview",
+  },
+  {
+    title: "Props Reference",
+    href: "/props-reference",
+  },
+  {
+    title: "Tutorials",
+    href: "/tutorials",
     items: [
       {
-        title: "Installation",
-        href: "/installation",
+        title: "Basic Table",
+        href: "/basic-table",
       },
       {
-        title: "Setup",
-        href: "/setup",
+        title: "Table with Groups",
+        href: "/table-with-groups",
       },
       {
-        title: "Changelog",
-        href: "/changelog",
+        title: "Editable Table",
+        href: "/editable-table",
       },
     ],
   },
   {
     spacer: true,
   },
+  // Core Features
   {
-    title: "Navigation",
-    href: "/navigation",
-    heading: "Documents",
+    heading: "Core Features",
+    title: "Column Definition",
+    href: "/column-definition",
   },
   {
-    title: "Structure",
-    href: "/structure",
+    title: "Editing Capabilities",
+    href: "/editing-capabilities",
+  },
+  {
+    title: "Highlight and Comments",
+    href: "/highlight-and-comments",
+  },
+  {
+    title: "Filtering",
+    href: "/filtering",
+  },
+  {
+    title: "Sorting",
+    href: "/sorting",
+  },
+  {
+    title: "Selection",
+    href: "/selection",
+  },
+  {
+    title: "Editing",
+    href: "/editing",
     items: [
       {
-        title: "Deep",
-        href: "/deep",
+        title: "Overview",
+        href: "/overview",
+      },
+      {
+        title: "Cell Editors",
+        href: "/cell-editors",
         items: [
           {
-            title: "Deeper",
-            href: "/deeper",
-            items: [
-              {
-                title: "Even deeper",
-                href: "/even-deeper",
-              },
-            ],
+            title: "Text Editor",
+            href: "/text-editor",
+          },
+          {
+            title: "Number Editor",
+            href: "/number-editor",
+          },
+          {
+            title: "Select Editor",
+            href: "/select-editor",
+          },
+        ],
+      },
+      {
+        title: "Single Cell Update",
+        href: "/single-cell-update",
+      },
+      {
+        title: "Bulk Update",
+        href: "/bulk-update",
+      },
+      {
+        title: "Delete",
+        href: "/delete",
+      },
+      {
+        title: "Copy and Paste",
+        href: "/copy-and-paste",
+      },
+      {
+        title: "Reorder Rows",
+        href: "/reorder-rows",
+      },
+      {
+        title: "Add a Comment",
+        href: "/add-comment",
+      },
+      {
+        title: "Highlight a Cell",
+        href: "/highlight-cell",
+      },
+      {
+        title: "Context Menu",
+        href: "/context-menu",
+        items: [
+          {
+            title: "Single Cell Context Menu",
+            href: "/single-cell-context-menu",
+          },
+          {
+            title: "Selection Context Menu",
+            href: "/selection-context-menu",
+          },
+          {
+            title: "Headers Context Menu",
+            href: "/headers-context-menu",
           },
         ],
       },
@@ -53,47 +139,22 @@ export const Documents: Paths[] = [
   {
     spacer: true,
   },
+  // Advanced Features
   {
-    title: "Markdown",
-    href: "/markdown",
-    heading: "Components",
-    items: [
-      {
-        title: "Cards",
-        href: "/cards",
-      },
-      {
-        title: "Diagrams",
-        href: "/diagrams",
-      },
-      {
-        title: "Filetree",
-        href: "/filetree",
-      },
-      {
-        title: "Lists",
-        href: "/lists",
-      },
-      {
-        title: "Maths",
-        href: "/maths",
-      },
-      {
-        title: "Notes",
-        href: "/notes",
-      },
-      {
-        title: "Steps",
-        href: "/steps",
-      },
-      {
-        title: "Table",
-        href: "/table",
-      },
-      {
-        title: "Tabs",
-        href: "/tabs",
-      },
-    ],
+    heading: "Advanced Features",
+    title: "Advanced Settings",
+    href: "/advanced-settings",
+  },
+  {
+    title: "Grouping",
+    href: "/grouping",
+  },
+  {
+    title: "Nested Rows",
+    href: "/nested-rows",
+  },
+  {
+    title: "TypeScript Reference",
+    href: "/typescript-reference",
   },
 ]

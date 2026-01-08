@@ -1,0 +1,112 @@
+---
+title: Bulk Update
+description: Update multiple cells simultaneously.
+keywords: ["bulk update", "multiple cells", "batch update", "onBulkChange"]
+---
+
+## Bulk Update
+
+Handle multiple cell updates efficiently with bulk update callbacks.
+
+### Two Approaches
+
+#### 1. Bulk Change (Multiple Columns)
+
+When multiple cells across different columns are updated:
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  onBulkChange={(changes, headerId) => {
+    changes.forEach(({ itemUpdated, originalIndex }) => {
+      // Update each item
+      saveItem(itemUpdated)
+    })
+  }}
+/>
+```
+
+#### 2. Bulk Field Change (Single Column)
+
+When multiple rows in the same column are updated:
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  onBulkFieldChange={(changes, headerId) => {
+    console.log(`Bulk update on column: ${headerId}`)
+
+    // Update all items at once
+    const updatedItems = changes.map((c) => c.itemUpdated)
+    saveBulk(updatedItems)
+  }}
+/>
+```
+
+### Parameters
+
+**onBulkChange:**
+
+```tsx
+(
+  items: {
+    itemUpdated: TableItem
+    originalIndex: number
+    fromArrayItemsAffected: Array
+  }[],
+  headerId?: string
+) => void
+```
+
+**onBulkFieldChange:**
+
+```tsx
+(
+  items: {
+    itemUpdated: TableItem
+    originalIndex: number
+    fromArrayIndex?: number
+  }[],
+  headerId: string
+) => void
+```
+
+### Use Cases
+
+| Scenario             | Callback            |
+| -------------------- | ------------------- |
+| Paste from clipboard | `onBulkChange`      |
+| Select all + change  | `onBulkFieldChange` |
+| Copy column          | `onBulkFieldChange` |
+
+### Example
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  onBulkFieldChange={async (changes, headerId) => {
+    try {
+      // Batch update database
+      await updateColumnBatch(
+        headerId,
+        changes.map((c, i) => ({
+          id: items[c.originalIndex].id,
+          value: c.itemUpdated[headerId],
+        }))
+      )
+
+      // Update local state
+      const newItems = [...items]
+      changes.forEach(({ itemUpdated, originalIndex }) => {
+        newItems[originalIndex] = itemUpdated
+      })
+      setItems(newItems)
+    } catch (error) {
+      showError("Bulk update failed")
+    }
+  }}
+/>
+```

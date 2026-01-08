@@ -1,0 +1,126 @@
+---
+title: Comments
+description: Add cell-level commenting for collaboration.
+keywords:
+  [
+    "comments",
+    "CommentData",
+    "onSaveComment",
+    "onDeleteComment",
+    "collaboration",
+  ]
+---
+
+## Comments
+
+Enable cell-level commenting for team collaboration.
+
+### Configuration
+
+```tsx
+interface CommentData {
+  id: string
+  headerId: string
+  itemId: string | number
+  text: string
+  author: string
+  timestamp: Date
+}
+
+;<BaseTable
+  headers={headers}
+  items={items}
+  comments={comments}
+  advancedSettings={{
+    currentUsername: "john.doe", // Current user for new comments
+  }}
+  onSaveComment={(comment, item) => {
+    console.log("Save comment:", comment)
+    console.log("On item:", item)
+  }}
+  onDeleteComment={(comment, item) => {
+    console.log("Delete comment:", comment)
+  }}
+/>
+```
+
+### Managing Comments
+
+```tsx
+const [comments, setComments] = useState<CommentData[]>([])
+
+<BaseTable
+  headers={headers}
+  items={items}
+  comments={comments}
+  advancedSettings={{
+    currentUsername: currentUser.name,
+  }}
+  onSaveComment={async (comment, item) => {
+    // Save to database
+    const savedComment = await saveCommentToDatabase(comment)
+
+    // Update local state
+    setComments((prev) => {
+      const existing = prev.find((c) => c.id === comment.id)
+      if (existing) {
+        return prev.map((c) => (c.id === comment.id ? savedComment : c))
+      }
+      return [...prev, savedComment]
+    })
+  }}
+  onDeleteComment={async (comment, item) => {
+    // Delete from database
+    await deleteCommentFromDatabase(comment.id)
+
+    // Update local state
+    setComments((prev) => prev.filter((c) => c.id !== comment.id))
+  }}
+/>
+```
+
+### Comment Data Structure
+
+| Field       | Type               | Description                  |
+| ----------- | ------------------ | ---------------------------- |
+| `id`        | `string`           | Unique comment identifier    |
+| `headerId`  | `string`           | Column the comment is on     |
+| `itemId`    | `string \| number` | Row the comment is on        |
+| `text`      | `string`           | Comment content              |
+| `author`    | `string`           | Who wrote the comment        |
+| `timestamp` | `Date`             | When the comment was created |
+
+### Visual Indicators
+
+Cells with comments typically show:
+
+- A comment indicator (e.g., small triangle in corner)
+- Hover tooltip with comment preview
+- Click to expand full comment thread
+
+### Filtering by Comments
+
+Find items with comments:
+
+```tsx
+const itemsWithComments = items.filter((item) =>
+  comments.some((c) => c.itemId === item.id)
+)
+```
+
+### Real-time Collaboration
+
+For real-time comment updates, integrate with websockets:
+
+```tsx
+useEffect(() => {
+  const ws = new WebSocket("wss://your-server/comments")
+
+  ws.onmessage = (event) => {
+    const newComment = JSON.parse(event.data)
+    setComments((prev) => [...prev, newComment])
+  }
+
+  return () => ws.close()
+}, [])
+```

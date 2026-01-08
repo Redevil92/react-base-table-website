@@ -1,0 +1,120 @@
+---
+title: Installation
+description: Learn how to install and set up react-base-table in your project.
+keywords: ["installation", "setup", "npm", "yarn", "react-base-table"]
+---
+
+## Installation
+
+Get started by installing `react-base-table` in your React project.
+
+### Prerequisites
+
+Before installing, make sure you have:
+
+- **Node.js** 18.0 or later
+- **React** 17.0 or later
+- A package manager (npm, yarn, or pnpm)
+
+### Install the Package
+
+Choose your preferred package manager:
+
+<Tabs defaultValue="npm" className="pt-5 pb-1">
+  <TabsList>
+    <TabsTrigger value="npm">npm</TabsTrigger>
+    <TabsTrigger value="yarn">yarn</TabsTrigger>
+    <TabsTrigger value="pnpm">pnpm</TabsTrigger>
+  </TabsList>
+  <TabsContent value="npm">
+
+```bash
+npm install react-base-table
+```
+
+  </TabsContent>
+  <TabsContent value="yarn">
+
+```bash
+yarn add react-base-table
+```
+
+  </TabsContent>
+  <TabsContent value="pnpm">
+
+```bash
+pnpm add react-base-table
+```
+
+  </TabsContent>
+</Tabs>
+
+### Import Styles
+
+Import the required CSS in your application entry point:
+
+```tsx
+import "react-base-table/styles.css"
+```
+
+### Basic Usage
+
+Here's a minimal example to verify your installation:
+
+```tsx
+import BaseTable, { Column } from "react-base-table"
+
+import "react-base-table/styles.css"
+
+const data = [
+  { id: 1, name: "John Doe", age: 28 },
+  { id: 2, name: "Jane Smith", age: 32 },
+]
+
+function App() {
+  return (
+    <BaseTable data={data} width={600} height={400}>
+      <Column key="name" dataKey="name" title="Name" width={300} />
+      <Column key="age" dataKey="age" title="Age" width={100} />
+    </BaseTable>
+  )
+}
+
+export default App
+```
+
+### TypeScript Support
+
+`react-base-table` includes TypeScript definitions out of the box. No additional `@types` packages are required.
+
+```tsx
+import BaseTable, { Column, ColumnShape } from "react-base-table"
+
+interface Person {
+  id: number
+  name: string
+  age: number
+}
+
+const columns: ColumnShape<Person>[] = [
+  { key: "name", dataKey: "name", title: "Name", width: 300 },
+  { key: "age", dataKey: "age", title: "Age", width: 100 },
+]
+```
+
+## Next Steps
+
+<CardGrid>
+  <Card
+    subtitle="Configuration"
+    title="Setup"
+    description="Configure your table with custom settings and options."
+    href="/docs/basic-setup/setup"
+  />
+  <Card
+    subtitle="Updates"
+    title="Changelog"
+    description="See what's new in the latest version."
+    href="/docs/basic-setup/changelog"
+  />
+</CardGrid>

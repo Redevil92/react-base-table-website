@@ -1,0 +1,69 @@
+---
+title: Editable Table
+description: Learn how to create a table with editable cells.
+keywords: ["editable", "table", "inline editing", "react-base-table"]
+---
+
+## Editable Table
+
+This example demonstrates how to create a table with editable cells using `react-base-table`.
+
+### Example
+
+```tsx
+import { useState } from "react"
+import BaseTable, { Column } from "react-base-table"
+
+import "react-base-table/styles.css"
+
+const initialData = [
+  { id: 1, name: "John Doe", email: "john@example.com" },
+  { id: 2, name: "Jane Smith", email: "jane@example.com" },
+  { id: 3, name: "Bob Johnson", email: "bob@example.com" },
+]
+
+function EditableTable() {
+  const [data, setData] = useState(initialData)
+
+  const handleCellChange = (rowIndex: number, key: string, value: string) => {
+    const newData = [...data]
+    newData[rowIndex] = { ...newData[rowIndex], [key]: value }
+    setData(newData)
+  }
+
+  const EditableCell = ({ rowIndex, dataKey, cellData }) => (
+    <input
+      value={cellData}
+      onChange={(e) => handleCellChange(rowIndex, dataKey, e.target.value)}
+      style={{ width: "100%", border: "none", background: "transparent" }}
+    />
+  )
+
+  return (
+    <BaseTable data={data} width={600} height={400}>
+      <Column
+        key="name"
+        dataKey="name"
+        title="Name"
+        width={200}
+        cellRenderer={EditableCell}
+      />
+      <Column
+        key="email"
+        dataKey="email"
+        title="Email"
+        width={300}
+        cellRenderer={EditableCell}
+      />
+    </BaseTable>
+  )
+}
+
+export default EditableTable
+```
+
+### Key Points
+
+- Use `cellRenderer` to provide custom cell components
+- Manage state externally and update on input changes
+- Pass row data through the cell renderer props

@@ -1,0 +1,88 @@
+---
+title: Drag & Drop Reordering
+description: Enable row reordering via drag and drop.
+keywords: ["drag drop", "reordering", "onRowsReordered", "enableRowDragDrop"]
+---
+
+## Drag & Drop Reordering
+
+Allow users to reorder rows by dragging them.
+
+### Enable Reordering
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  advancedSettings={{
+    enableRowDragDrop: true,
+  }}
+  onRowsReordered={(fromIndex, toIndex) => {
+    console.log(`Move row from ${fromIndex} to ${toIndex}`)
+
+    // Reorder your items array
+    const newItems = [...items]
+    const [removed] = newItems.splice(fromIndex, 1)
+    newItems.splice(toIndex, 0, removed)
+    setItems(newItems)
+  }}
+/>
+```
+
+### onRowsReordered Parameters
+
+| Parameter   | Type     | Description                      |
+| ----------- | -------- | -------------------------------- |
+| `fromIndex` | `number` | Original position of dragged row |
+| `toIndex`   | `number` | New position after drop          |
+
+### Persisting Order
+
+Save the new order to your database:
+
+```tsx
+onRowsReordered={async (fromIndex, toIndex) => {
+  // Update local state
+  const newItems = reorderArray(items, fromIndex, toIndex)
+  setItems(newItems)
+
+  // Persist to database
+  await updateItemOrder(newItems.map((item, index) => ({
+    id: item.id,
+    order: index,
+  })))
+}}
+```
+
+### Helper Function
+
+```tsx
+function reorderArray<T>(array: T[], from: number, to: number): T[] {
+  const result = [...array]
+  const [removed] = result.splice(from, 1)
+  result.splice(to, 0, removed)
+  return result
+}
+```
+
+### Disable for Specific Rows
+
+Use `disabledRows` in advanced settings to prevent reordering certain rows:
+
+```tsx
+advancedSettings={{
+  enableRowDragDrop: true,
+  disabledRows: {
+    property: "locked",
+    values: [true],
+  },
+}}
+```
+
+### Visual Feedback
+
+The table provides visual indicators during drag:
+
+- Dragged row is highlighted
+- Drop position is indicated
+- Invalid drop zones are shown

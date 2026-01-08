@@ -1,0 +1,110 @@
+---
+title: Sorting
+description: Enable column sorting with custom sort functions.
+keywords: ["sorting", "sortable", "customSort", "onSortByColumn", "onResetSort"]
+---
+
+## Sorting
+
+Enable column sorting with built-in or custom sort logic.
+
+### Enable Sorting
+
+Add `sortable: true` to your header:
+
+```tsx
+const headers: BaseTableHeader[] = [
+  {
+    id: "name",
+    text: "Name",
+    sortable: true,
+  },
+  {
+    id: "date",
+    text: "Date",
+    sortable: true,
+  },
+]
+```
+
+### Handle Sort Events
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  advancedSettings={{
+    currentSortId: sortedColumn, // Track current sort
+  }}
+  onSortByColumn={(columnId) => {
+    console.log(`Sort by: ${columnId}`)
+    // Update your sort state
+    setSortedColumn(columnId)
+  }}
+  onResetSort={() => {
+    console.log("Sort reset")
+    setSortedColumn(null)
+  }}
+/>
+```
+
+### Custom Sort Function
+
+Override default sorting with `customSort`:
+
+```tsx
+{
+  id: "priority",
+  text: "Priority",
+  sortable: true,
+  customSort: (a, b, ascendingOrder) => {
+    const priorityOrder = { High: 3, Medium: 2, Low: 1 }
+    const aValue = priorityOrder[a.priority] || 0
+    const bValue = priorityOrder[b.priority] || 0
+
+    return ascendingOrder ? aValue - bValue : bValue - aValue
+  },
+}
+```
+
+### Custom Sort Parameters
+
+```tsx
+customSort: (
+  a: TableItem, // First item to compare
+  b: TableItem, // Second item to compare
+  ascendingOrder: boolean // Current sort direction
+) => number // Return: negative (a first), positive (b first), 0 (equal)
+```
+
+### Tracking Sort State
+
+Use `currentSortId` in advanced settings to show sort indicators:
+
+```tsx
+advancedSettings={{
+  currentSortId: "name",  // Column currently sorted
+}}
+```
+
+### Multi-Column Sorting
+
+For multi-column sorting, track sort state externally and apply in your data layer:
+
+```tsx
+const [sortConfig, setSortConfig] = useState([
+  { column: "department", direction: "asc" },
+  { column: "name", direction: "asc" },
+])
+
+// Sort items before passing to table
+const sortedItems = useMemo(() => {
+  return [...items].sort((a, b) => {
+    for (const { column, direction } of sortConfig) {
+      if (a[column] < b[column]) return direction === "asc" ? -1 : 1
+      if (a[column] > b[column]) return direction === "asc" ? 1 : -1
+    }
+    return 0
+  })
+}, [items, sortConfig])
+```

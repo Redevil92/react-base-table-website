@@ -1,0 +1,84 @@
+---
+title: Select Editor
+description: Choose from predefined options with the select editor.
+keywords: ["select editor", "dropdown", "list", "options", "choice"]
+---
+
+## Select Editor
+
+The select editor provides a dropdown for choosing from predefined options.
+
+### Configuration
+
+```tsx
+{
+  id: "status",
+  text: "Status",
+  editOptions: {
+    editable: true,
+    type: "list",
+    options: ["Active", "Pending", "Inactive"],
+    defaultValue: "Pending",
+    canAddNewOption: true,
+  },
+}
+```
+
+### Properties
+
+| Property          | Type       | Description              |
+| ----------------- | ---------- | ------------------------ |
+| `type`            | `"list"`   | Editor type              |
+| `options`         | `string[]` | Available choices        |
+| `defaultValue`    | `string`   | Default selected option  |
+| `required`        | `boolean`  | Field is required        |
+| `canAddNewOption` | `boolean`  | Allow adding new options |
+| `isDisabled`      | `function` | Conditionally disable    |
+| `notApplicable`   | `function` | Mark as N/A              |
+
+### Dynamic Options
+
+Allow users to add new options:
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  advancedSettings={{
+    canAddListOptions: true,
+    selectNewOptionOnAdd: true,
+  }}
+  onAddListOption={(newOption, header) => {
+    // Update header options
+    updateHeaderOptions(header.id, newOption)
+  }}
+/>
+```
+
+### Example
+
+```tsx
+{
+  id: "priority",
+  text: "Priority",
+  editOptions: {
+    editable: true,
+    type: "list",
+    options: ["Low", "Medium", "High"],
+    defaultValue: "Medium",
+    canAddNewOption: false,
+  },
+}
+```
+
+### Conditional Enabling
+
+```tsx
+editOptions: {
+  editable: true,
+  type: "list",
+  options: ["Draft", "Published", "Archived"],
+  isDisabled: (item) => item.locked === true,
+  notApplicable: (item) => item.type === "template",
+}
+```

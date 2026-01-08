@@ -1,0 +1,100 @@
+---
+title: Custom Group Rendering
+description: Advanced customization for group headers.
+keywords: ["custom group", "groupByCustomRender", "group header", "styling"]
+---
+
+## Custom Group Rendering
+
+Create rich, interactive group headers with `groupByCustomRender`.
+
+### Full Example
+
+```tsx
+const CustomGroupHeader = (
+  groupBy,
+  value,
+  columnsCount,
+  isCollapsed,
+  onCollapseGroup,
+  filteredItemsInGroup,
+  masterGroupName,
+  linkedGroupNames
+) => {
+  const itemCount = filteredItemsInGroup.length
+  const totalValue = filteredItemsInGroup.reduce(
+    (sum, item) => sum + (item.amount || 0),
+    0
+  )
+
+  return (
+    <tr
+      className="group-header cursor-pointer hover:bg-gray-100"
+      onClick={() => onCollapseGroup(value)}
+    >
+      <td colSpan={columnsCount} className="p-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-gray-500">{isCollapsed ? "▶" : "▼"}</span>
+            <span className="text-lg font-semibold">{value}</span>
+            <span className="text-sm text-gray-500">
+              {itemCount} {itemCount === 1 ? "item" : "items"}
+            </span>
+          </div>
+          <div className="text-right">
+            <span className="font-mono">
+              Total: ${totalValue.toLocaleString()}
+            </span>
+          </div>
+        </div>
+      </td>
+    </tr>
+  )
+}
+
+;<BaseTable
+  headers={headers}
+  items={items}
+  groupBy="category"
+  groupByCustomRender={CustomGroupHeader}
+/>
+```
+
+### Accessing Group Items
+
+The `filteredItemsInGroup` array contains `ItemWithGroupInfo` objects:
+
+```tsx
+interface ItemWithGroupInfo extends TableItem {
+  __groupValue: string
+  __originalIndex: number
+}
+```
+
+### Aggregations
+
+Calculate totals, averages, or other aggregations:
+
+```tsx
+// Sum
+const total = filteredItemsInGroup.reduce((sum, item) => sum + item.amount, 0)
+
+// Average
+const avg = total / filteredItemsInGroup.length
+
+// Count by status
+const statusCounts = filteredItemsInGroup.reduce((acc, item) => {
+  acc[item.status] = (acc[item.status] || 0) + 1
+  return acc
+}, {})
+```
+
+### Styling Tips
+
+```tsx
+<tr
+  className={` ${isCollapsed ? "bg-gray-50" : "bg-blue-50"} transition-colors duration-200`}
+>
+  {/* ... */}
+</tr>
+```

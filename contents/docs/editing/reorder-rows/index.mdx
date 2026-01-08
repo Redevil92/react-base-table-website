@@ -1,0 +1,104 @@
+---
+title: Reorder Rows
+description: Drag and drop to reorder rows in the table.
+keywords: ["reorder", "drag drop", "drag and drop", "row reordering"]
+---
+
+## Reorder Rows
+
+Enable users to reorganize rows using drag and drop.
+
+### Enable Reordering
+
+```tsx
+<BaseTable
+  headers={headers}
+  items={items}
+  advancedSettings={{
+    enableRowDragDrop: true,
+  }}
+  onRowsReordered={(fromIndex, toIndex) => {
+    // Reorder items
+    const newItems = reorderArray(items, fromIndex, toIndex)
+    setItems(newItems)
+  }}
+/>
+```
+
+### onRowsReordered Callback
+
+```tsx
+onRowsReordered: (fromIndex: number, toIndex: number) => void
+```
+
+### Helper Function
+
+```tsx
+function reorderArray<T>(array: T[], from: number, to: number): T[] {
+  const result = [...array]
+  const [removed] = result.splice(from, 1)
+  result.splice(to, 0, removed)
+  return result
+}
+```
+
+### Persist Changes
+
+Save new order to database:
+
+```tsx
+onRowsReordered={async (fromIndex, toIndex) => {
+  const newItems = reorderArray(items, fromIndex, toIndex)
+  setItems(newItems)
+
+  // Save to database
+  await updateItemOrder(newItems.map((item, index) => ({
+    id: item.id,
+    order: index,
+  })))
+}}
+```
+
+### Disable for Specific Rows
+
+Prevent certain rows from being dragged:
+
+```tsx
+advancedSettings={{
+  enableRowDragDrop: true,
+  disabledRows: {
+    property: "locked",
+    values: [true],
+  },
+}}
+```
+
+### Visual Feedback
+
+The table provides:
+
+- Dragged row highlighting
+- Drop position indicator
+- Invalid drop zone feedback
+
+### Example with Confirmation
+
+```tsx
+onRowsReordered={async (fromIndex, toIndex) => {
+  const confirmed = window.confirm("Reorder items?")
+
+  if (confirmed) {
+    try {
+      const newItems = reorderArray(items, fromIndex, toIndex)
+      await updateItemOrder(newItems)
+      setItems(newItems)
+      showSuccess("Items reordered")
+    } catch (error) {
+      showError("Failed to reorder")
+    }
+  } else {
+    // Revert order
+    setItems([...items])
+  }
+}}
+```
