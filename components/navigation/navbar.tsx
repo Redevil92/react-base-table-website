@@ -28,7 +28,7 @@ export function Navbar() {
 
         <div className="flex items-center gap-2">
           <Search />
-          <div className="flex gap-2 sm:ml-0">
+          {/* <div className="flex gap-2 sm:ml-0">
             {GitHubLink.href && (
               <Link
                 href={GitHubLink.href}
@@ -41,7 +41,7 @@ export function Navbar() {
               </Link>
             )}
             <ModeToggle />
-          </div>
+          </div> */}
         </div>
       </div>
     </nav>

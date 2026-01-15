@@ -41,18 +41,114 @@ Columns are defined using the `BaseTableHeader` interface. Each column controls 
 
 ### Column Properties
 
-| Property       | Type                            | Description                      |
-| -------------- | ------------------------------- | -------------------------------- |
-| `id`           | `string`                        | Unique ID matching data property |
-| `text`         | `string`                        | Header display text              |
-| `width`        | `number`                        | Column width in pixels           |
-| `align`        | `"left" \| "center" \| "right"` | Text alignment                   |
-| `sortable`     | `boolean`                       | Enable column sorting            |
-| `hasFilter`    | `boolean`                       | Enable column filtering          |
-| `editOptions`  | `EditOptions`                   | Cell editing configuration       |
-| `customRender` | `function`                      | Custom cell rendering            |
-| `customHeader` | `function`                      | Custom header rendering          |
-| `children`     | `BaseTableHeader[]`             | Nested column groups             |
+| Property        | Type                            | Required | Description                                         |
+| --------------- | ------------------------------- | -------- | --------------------------------------------------- |
+| `id`            | `string`                        | Yes      | Unique identifier matching the data property name   |
+| `text`          | `string`                        | Yes      | Display text shown in the column header             |
+| `width`         | `number`                        | No       | Column width in pixels                              |
+| `align`         | `"left" \| "center" \| "right"` | No       | Horizontal text alignment (default: "left")         |
+| `sortable`      | `boolean`                       | No       | Enable column sorting functionality                 |
+| `hasFilter`     | `boolean`                       | No       | Enable column filtering functionality               |
+| `fromArray`     | `string`                        | No       | Name of array property to expand into multiple rows |
+| `arrayRowsOnly` | `boolean`                       | No       | Show only rows from array data (hide root row)      |
+| `children`      | `BaseTableHeader[]`             | No       | Nested/grouped column headers                       |
+| `editOptions`   | `EditOptions`                   | No       | Cell editing configuration                          |
+| `customRender`  | `function`                      | No       | Custom cell renderer function                       |
+| `customHeader`  | `function`                      | No       | Custom header renderer function                     |
+| `customSort`    | `function`                      | No       | Custom sorting function                             |
+
+### Edit Options
+
+The `editOptions` object controls inline cell editing:
+
+```tsx
+editOptions: {
+  editable: true,                          // Enable editing
+  type: "string" | "number" | "list",      // Input type
+  options: ["Option1", "Option2"],         // For list type
+  defaultValue: "default",                 // Default value for new items
+  required: true,                          // Mark as required field
+  canAddNewOption: true,                   // Allow adding new options to list
+  greyedOutIfNotEditable: true,            // Visual indicator when disabled
+  isDisabled: (item, fromArrayData) => false,           // Conditionally disable
+  notApplicable: (item, fromArrayData) => false,        // Mark as N/A
+}
+```
+
+| Property                 | Type               | Description                                           |
+| ------------------------ | ------------------ | ----------------------------------------------------- |
+| `editable`               | `boolean`          | Enable/disable editing for this column                |
+| `type`                   | `string`           | "string", "number", or "list"                         |
+| `options`                | `string[]`         | Available options for list type columns               |
+| `defaultValue`           | `string \| number` | Default value when creating new items                 |
+| `required`               | `boolean`          | Mark field as required                                |
+| `canAddNewOption`        | `boolean`          | Allow users to add custom options to list             |
+| `greyedOutIfNotEditable` | `boolean`          | Grey out cells that are not editable                  |
+| `isDisabled`             | `function`         | Disable editing based on item data or array context   |
+| `notApplicable`          | `function`         | Mark cells as N/A based on item data or array context |
+
+### Custom Rendering
+
+#### Custom Cell Renderer
+
+```tsx
+customRender: (item, header, fromArrayData, isDisabled) => (
+  <span className="custom-cell">{item[header.id]}</span>
+)
+```
+
+| Parameter       | Type                | Description                              |
+| --------------- | ------------------- | ---------------------------------------- |
+| `item`          | `TableItem`         | The row data object                      |
+| `header`        | `BaseTableHeader`   | The column header configuration          |
+| `fromArrayData` | `{ index: number }` | Array index when using fromArray feature |
+| `isDisabled`    | `boolean`           | Whether the cell is disabled             |
+
+#### Custom Header Renderer
+
+```tsx
+customHeader: (header) => <div className="custom-header">{header.text}</div>
+```
+
+#### Custom Sort Function
+
+```tsx
+customSort: (a, b, ascendingOrder) => {
+  const aValue = a[header.id]
+  const bValue = b[header.id]
+  return ascendingOrder ? aValue - bValue : bValue - aValue
+}
+```
+
+| Parameter        | Type        | Description         |
+| ---------------- | ----------- | ------------------- |
+| `a`, `b`         | `TableItem` | Two rows to compare |
+| `ascendingOrder` | `boolean`   | Sort direction      |
+
+### fromArray Feature
+
+The `fromArray` property expands array data into multiple rows:
+
+```tsx
+interface Student {
+  id: number
+  name: string
+  testScores: Array<{ subject: string; score: number }>
+}
+
+const headers = [
+  { id: "name", text: "Name", width: 150 },
+  { id: "subject", text: "Subject", width: 120, fromArray: "testScores" },
+  { id: "score", text: "Score", width: 80, fromArray: "testScores" },
+]
+
+// Output: Each student appears as multiple rows, one per test score
+```
+
+| Property        | Type      | Description                                           |
+| --------------- | --------- | ----------------------------------------------------- |
+| `fromArray`     | `string`  | Name of the array property in data                    |
+| `arrayRowsOnly` | `boolean` | If true, hides the parent row (only shows array rows) |
 
 ### Nested Columns
 
@@ -73,4 +169,4 @@ Columns support different data types:
 
 - **String** - Text values
 - **Number** - Numeric values
-- **List** - Dropdown selections
+- **List** - Dropdown selections with predefined or custom options

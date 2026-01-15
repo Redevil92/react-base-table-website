@@ -14,7 +14,7 @@ export function Footer() {
           </Link>
           .
         </p>
-        {Company.branding !== false && (
+        {/* {Company.branding !== false && (
           <div className="hidden text-center md:block">
             <Link
               className="font-semibold"
@@ -29,7 +29,7 @@ export function Footer() {
               />
             </Link>
           </div>
-        )}
+        )} */}
       </div>
     </footer>
   )
