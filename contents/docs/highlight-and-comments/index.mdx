@@ -18,10 +18,10 @@ Highlight cells based on conditions:
   items={items}
   highlightCondition={[
     {
-      id: "highlight-1",
-      headerId: "status",
-      itemId: 1,
+      propertyId: "status",
+      value: "in progress",
       style: { backgroundColor: "#ffeb3b", color: "#000" },
+      columnId: "status",
     },
   ]}
   onSetHighlightCondition={(highlight, item) => {
@@ -29,6 +29,27 @@ Highlight cells based on conditions:
   }}
 />
 ```
+
+#### HighlightCondition interface
+
+The `HighlightCondition` used by highlighting looks up an item's property by `propertyId` and compares it to `value`. When they match, the provided `style` is applied. Here is the interface shape:
+
+```ts
+import { type CSSProperties } from "react"
+
+export default interface HighlightCondition {
+  propertyId: string
+  value: unknown
+  style: CSSProperties
+  columnId?: string // Optional, if provided, applies the style to the specific column only
+}
+```
+
+Guidance:
+
+- **Matching behavior:** The highlight is applied when an item's property with the name `propertyId` strictly equals `value`.
+- **Targeting a single cell:** Ensure the pair (`propertyId`, `value`) uniquely identifies the cell you want to highlight. A common pattern is to use `propertyId: "id"` and `value` equal to the item's unique id.
+- **Highlighting many cells:** To highlight all cells sharing a common value (for example, all rows where `status` is `"in progress"`), set `propertyId: "status"` and `value: "in progress"`. If you also pass `columnId`, the style will only apply to that column's cells that match the condition.
 
 ### Comments
 

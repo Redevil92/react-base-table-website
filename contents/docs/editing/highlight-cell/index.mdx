@@ -16,10 +16,10 @@ Apply conditional styling to cells for visual organization.
   items={items}
   highlightCondition={[
     {
-      id: "highlight-1",
-      headerId: "status",
-      itemId: 1,
+      propertyId: "status",
+      value: "in progress",
       style: { backgroundColor: "#ffeb3b", color: "#000" },
+      columnId: "status",
     },
   ]}
 />
@@ -27,12 +27,14 @@ Apply conditional styling to cells for visual organization.
 
 ### HighlightCondition Structure
 
-```tsx
-interface HighlightCondition {
-  id: string // Unique highlight ID
-  headerId: string // Column ID
-  itemId: string | number // Row ID
-  style: CSSProperties // CSS to apply
+```ts
+import { type CSSProperties } from "react"
+
+export default interface HighlightCondition {
+  propertyId: string
+  value: unknown
+  style: CSSProperties
+  columnId?: string // Optional, if provided, applies the style to the specific column only
 }
 ```
 
@@ -59,16 +61,10 @@ Allow users to highlight cells:
 Remove highlights from cells:
 
 ```tsx
-onRemoveHighlightCondition={(highlight, cssProperty, item) => {
-  // Remove specific CSS property
-  const updated = {
-    ...highlight,
-    style: { ...highlight.style },
-  }
-  delete updated.style[cssProperty]
-
-  const newHighlights = highlights.map((h) =>
-    h.id === highlight.id ? updated : h
+onRemoveHighlightCondition={(highlight, item) => {
+  // Remove the highlight
+  const newHighlights = highlights.filter(
+    (h) => h.propertyId !== highlight.propertyId || h.value !== highlight.value
   )
   setHighlights(newHighlights)
 }}
@@ -103,14 +99,20 @@ const getPriorityColor = (priority: string) => {
 }
 
 // Apply highlights based on data
-const highlights = items
-  .filter((item) => item.priority === "high")
-  .map((item, i) => ({
-    id: `priority-${item.id}`,
-    headerId: "status",
-    itemId: item.id,
-    style: getPriorityColor(item.priority),
-  }))
+const highlights = [
+  {
+    propertyId: "priority",
+    value: "high",
+    style: getPriorityColor("high"),
+    columnId: "priority",
+  },
+  {
+    propertyId: "priority",
+    value: "medium",
+    style: getPriorityColor("medium"),
+    columnId: "priority",
+  },
+]
 ```
 
 ### Persist Highlights

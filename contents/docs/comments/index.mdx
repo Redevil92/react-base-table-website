@@ -18,16 +18,7 @@ Enable cell-level commenting for team collaboration.
 ### Configuration
 
 ```tsx
-interface CommentData {
-  id: string
-  headerId: string
-  itemId: string | number
-  text: string
-  author: string
-  timestamp: Date
-}
-
-;<BaseTable
+<BaseTable
   headers={headers}
   items={items}
   comments={comments}
@@ -43,6 +34,31 @@ interface CommentData {
   }}
 />
 ```
+
+### CommentData Interface
+
+The `CommentData` interface defines the structure for comments. Comments are applied based on `propertyId` and `value` matching:
+
+```ts
+export default interface CommentData {
+  propertyId: string
+  value: unknown
+  date: Date
+  formatDateFunction?: (date: Date) => string // Optional function to format the date
+  author?: string
+  commentId?: number // Optional, if available
+  columnId?: string // Optional, if provided, applies the comment to the specific column only
+  text: string // The comment text
+}
+```
+
+Guidance:
+
+- **Matching behavior:** The comment is applied when an item's property with the name `propertyId` strictly equals `value`.
+- **Targeting a specific cell:** Ensure the pair (`propertyId`, `value`) uniquely identifies the cell you want to comment on. A common pattern is to use `propertyId: "id"` and `value` equal to the item's unique id.
+- **Column-specific comments:** If you also pass `columnId`, the comment will only appear on that specific column's cell for items that match the condition.
+
+````
 
 ### Managing Comments
 
@@ -62,33 +78,46 @@ const [comments, setComments] = useState<CommentData[]>([])
 
     // Update local state
     setComments((prev) => {
-      const existing = prev.find((c) => c.id === comment.id)
+      const existing = prev.find(
+        (c) => c.propertyId === comment.propertyId && c.value === comment.value
+      )
       if (existing) {
-        return prev.map((c) => (c.id === comment.id ? savedComment : c))
+        return prev.map((c) =>
+          c.propertyId === comment.propertyId && c.value === comment.value
+            ? savedComment
+            : c
+        )
       }
       return [...prev, savedComment]
     })
   }}
   onDeleteComment={async (comment, item) => {
     // Delete from database
-    await deleteCommentFromDatabase(comment.id)
+    await deleteCommentFromDatabase(comment.commentId)
 
     // Update local state
-    setComments((prev) => prev.filter((c) => c.id !== comment.id))
+    setComments((prev) =>
+      prev.filter(
+        (c) =>
+          c.propertyId !== comment.propertyId || c.value !== comment.value
+      )
+    )
   }}
 />
-```
+````
 
 ### Comment Data Structure
 
-| Field       | Type               | Description                  |
-| ----------- | ------------------ | ---------------------------- |
-| `id`        | `string`           | Unique comment identifier    |
-| `headerId`  | `string`           | Column the comment is on     |
-| `itemId`    | `string \| number` | Row the comment is on        |
-| `text`      | `string`           | Comment content              |
-| `author`    | `string`           | Who wrote the comment        |
-| `timestamp` | `Date`             | When the comment was created |
+| Field                | Type                     | Description                                             |
+| -------------------- | ------------------------ | ------------------------------------------------------- |
+| `propertyId`         | `string`                 | The property name to match on the item                  |
+| `value`              | `unknown`                | The value to match for the property                     |
+| `date`               | `Date`                   | When the comment was created                            |
+| `text`               | `string`                 | The comment content                                     |
+| `author`             | `string` (optional)      | Who wrote the comment                                   |
+| `commentId`          | `number` (optional)      | Unique comment identifier                               |
+| `columnId`           | `string` (optional)      | If provided, applies the comment to the specific column |
+| `formatDateFunction` | `(date: Date) => string` | Optional function to format the date display            |
 
 ### Visual Indicators
 
@@ -104,7 +133,7 @@ Find items with comments:
 
 ```tsx
 const itemsWithComments = items.filter((item) =>
-  comments.some((c) => c.itemId === item.id)
+  comments.some((c) => item[c.propertyId] === c.value)
 )
 ```
 
