@@ -136,20 +136,3 @@ const itemsWithComments = items.filter((item) =>
   comments.some((c) => item[c.propertyId] === c.value)
 )
 ```
-
-### Real-time Collaboration
-
-For real-time comment updates, integrate with websockets:
-
-```tsx
-useEffect(() => {
-  const ws = new WebSocket("wss://your-server/comments")
-
-  ws.onmessage = (event) => {
-    const newComment = JSON.parse(event.data)
-    setComments((prev) => [...prev, newComment])
-  }
-
-  return () => ws.close()
-}, [])
-```

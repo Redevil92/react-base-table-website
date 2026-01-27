@@ -29,46 +29,76 @@ const headers: BaseTableHeader[] = [
 
 ### Active Filters
 
-Pass current filter state with `activeFilters`:
+Pass the current filter state with `activeFilters`. If you don't provide it, users will still be able to filter items. This is just to initialize filters when needed. Here is the interface for `activeFilters`:
 
-```tsx
+```ts
 interface ActiveTableFilter {
   headerId: string
-  values: string[]
+  itemsToHide: string[] | number[]
+  numberConditions?: NumberCondition[]
 }
 
-;<BaseTable
+type Operator = "=" | ">" | "<" | ">=" | "<=" | "between"
+
+interface NumberCondition {
+  id: string
+  operator: Operator
+  value1: number
+  value2?: number // Required when operator is "between"
+}
+```
+
+Basic string filtering:
+
+```tsx
+<BaseTable
   headers={headers}
   items={items}
   activeFilters={[
     {
       headerId: "status",
-      values: ["Active", "Pending"],
+      itemsToHide: ["Inactive"],
     },
     {
       headerId: "department",
-      values: ["Engineering"],
+      itemsToHide: ["HR"],
     },
   ]}
 />
 ```
 
-### Managing Filter State
+Number filtering with conditions:
 
 ```tsx
-const [filters, setFilters] = useState<ActiveTableFilter[]>([])
-
-const handleFilterChange = (headerId: string, values: string[]) => {
-  setFilters((prev) => {
-    const existing = prev.filter((f) => f.headerId !== headerId)
-    if (values.length > 0) {
-      return [...existing, { headerId, values }]
-    }
-    return existing
-  })
-}
-
-;<BaseTable headers={headers} items={items} activeFilters={filters} />
+<BaseTable
+  headers={headers}
+  items={items}
+  activeFilters={[
+    {
+      headerId: "salary",
+      itemsToHide: [],
+      numberConditions: [
+        {
+          id: "salary-min",
+          operator: ">=",
+          value1: 50000,
+        },
+      ],
+    },
+    {
+      headerId: "age",
+      itemsToHide: [],
+      numberConditions: [
+        {
+          id: "age-range",
+          operator: "between",
+          value1: 25,
+          value2: 65,
+        },
+      ],
+    },
+  ]}
+/>
 ```
 
 ### Filter with List Columns
@@ -87,11 +117,3 @@ Combine filtering with list-type columns for dropdown filters:
   },
 }
 ```
-
-### Performance Considerations
-
-For large datasets:
-
-- Filter data on the server side
-- Use debounced filter updates
-- Consider virtual scrolling with filtered results

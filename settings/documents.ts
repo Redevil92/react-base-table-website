@@ -97,10 +97,6 @@ export const Documents: Paths[] = [
         href: "/bulk-update",
       },
       {
-        title: "Delete",
-        href: "/delete",
-      },
-      {
         title: "Copy and Paste",
         href: "/copy-and-paste",
       },

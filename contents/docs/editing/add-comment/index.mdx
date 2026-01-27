@@ -76,28 +76,3 @@ const deleteComment = async (commentId: string) => {
   setComments(comments.filter((c) => c.id !== commentId))
 }
 ```
-
-### Real-time Collaboration
-
-For real-time updates, integrate with WebSocket:
-
-```tsx
-useEffect(() => {
-  const ws = new WebSocket("wss://your-server/comments")
-
-  ws.onmessage = (event) => {
-    const newComment = JSON.parse(event.data)
-    setComments((prev) => [...prev, newComment])
-  }
-
-  return () => ws.close()
-}, [])
-```
-
-### Comment Indicators
-
-Show visual indicators for cells with comments:
-
-- Small icon in cell corner
-- Hover tooltip with preview
-- Click to open comment thread
