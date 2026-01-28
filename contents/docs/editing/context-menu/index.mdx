@@ -6,41 +6,41 @@ keywords: ["context menu", "right-click", "menu", "actions"]
 
 ## Context Menu
 
-Add right-click menus for quick actions on cells, selections, and headers.
+The table provides built-in context menus that appear when users right-click on cells or headers. These menus offer quick access to common actions without cluttering the interface.
 
-### Three Types of Context Menus
+### Configuration
 
-<CardGrid>
-  <Card
-    subtitle="Menu"
-    title="Single Cell Context Menu"
-    description="Options for individual cells."
-    href="/docs/editing/context-menu/single-cell-context-menu"
-  />
-  <Card
-    subtitle="Menu"
-    title="Selection Context Menu"
-    description="Actions on selected rows/cells."
-    href="/docs/editing/context-menu/selection-context-menu"
-  />
-  <Card
-    subtitle="Menu"
-    title="Headers Context Menu"
-    description="Column operations."
-    href="/docs/editing/context-menu/headers-context-menu"
-  />
-</CardGrid>
+Enable or disable context menus through the `advancedSettings` prop:
 
-### Context Menu Actions
+```ts
+advancedSettings={{
+  contextMenu: {
+    showOnHeader: boolean;  // Enable context menu on header cells
+    showOnCell: boolean;    // Enable context menu on data cells
+  }
+}}
+```
 
-Common actions include:
+### Cell Context Menu
 
-- Edit cell
-- Copy/Cut
-- Paste
-- Delete
-- Add comment
-- Highlight
-- Format
-- Filter
-- Sort
+When right-clicking on a data cell, users can access cell-specific actions:
+
+![Cell Context Menu](/images/context-menu/cell-context-menu.png)
+
+Available actions:
+
+- **Add a comment** — Leave a note on the cell for collaboration
+- **Set color** — Apply a highlight color to the cell
+
+### Header Context Menu
+
+When right-clicking on a column header, users can access column-level operations:
+
+![Header Context Menu](/images/context-menu/header-context-menu.png)
+
+Available actions:
+
+- **Sort** — Sort the table by this column
+- **Choose columns** — Select which columns to display
+- **Reset columns** — Restore columns to their default configuration
+- **Chart range** — Create a chart from the selected data range

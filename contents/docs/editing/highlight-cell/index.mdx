@@ -38,6 +38,23 @@ export default interface HighlightCondition {
 }
 ```
 
+### Highlight Callbacks
+
+The table provides two callbacks for managing highlights:
+
+```ts
+onSetHighlightCondition?: (
+  highlightCondition: HighlightCondition,
+  item: TableItem
+) => Promise<void> | void;
+
+onRemoveHighlightCondition?: (
+  highlightCondition: HighlightCondition,
+  cssPropertyToRemove: keyof CSSProperties,
+  item: TableItem
+) => Promise<void> | void;
+```
+
 ### Set Highlight
 
 Allow users to highlight cells:
@@ -53,75 +70,19 @@ Allow users to highlight cells:
     setHighlights(newHighlights)
     saveHighlight(highlight)
   }}
+  onRemoveHighlightCondition={(highlight, cssProperty, item) => {
+    // Your logic here
+  }}
 />
 ```
 
-### Remove Highlight
-
-Remove highlights from cells:
+**Important:** To highlight only a single cell, ensure that the pair (`propertyId`, `value`) uniquely identifies that cell. A common pattern is to use `propertyId: "id"` with the item's unique id as the `value`. For example:
 
 ```tsx
-onRemoveHighlightCondition={(highlight, item) => {
-  // Remove the highlight
-  const newHighlights = highlights.filter(
-    (h) => h.propertyId !== highlight.propertyId || h.value !== highlight.value
-  )
-  setHighlights(newHighlights)
-}}
-```
-
-### Common Highlight Colors
-
-```tsx
-// Warning
-{ backgroundColor: "#fff3cd", color: "#856404" }
-
-// Error
-{ backgroundColor: "#f8d7da", color: "#721c24" }
-
-// Success
-{ backgroundColor: "#d4edda", color: "#155724" }
-
-// Info
-{ backgroundColor: "#cce5ff", color: "#004085" }
-```
-
-### Example: Priority Highlighting
-
-```tsx
-const getPriorityColor = (priority: string) => {
-  const colors: Record<string, CSSProperties> = {
-    high: { backgroundColor: "#f8d7da", color: "#721c24" },
-    medium: { backgroundColor: "#fff3cd", color: "#856404" },
-    low: { backgroundColor: "#d4edda", color: "#155724" },
-  }
-  return colors[priority] || {}
+{
+  propertyId: "id",
+  value: 123, // Unique item ID
+  style: { backgroundColor: "#ffeb3b" },
+  columnId: "status",
 }
-
-// Apply highlights based on data
-const highlights = [
-  {
-    propertyId: "priority",
-    value: "high",
-    style: getPriorityColor("high"),
-    columnId: "priority",
-  },
-  {
-    propertyId: "priority",
-    value: "medium",
-    style: getPriorityColor("medium"),
-    columnId: "priority",
-  },
-]
-```
-
-### Persist Highlights
-
-Save highlight state:
-
-```tsx
-onSetHighlightCondition={async (highlight, item) => {
-  await saveHighlight(highlight)
-  setHighlights([...highlights, highlight])
-}}
 ```

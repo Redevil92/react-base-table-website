@@ -27,14 +27,16 @@ Enable users to leave notes on cells for team collaboration.
 
 ### Comment Structure
 
-```tsx
-interface CommentData {
-  id: string
-  headerId: string // Column ID
-  itemId: string | number // Row ID
-  text: string // Comment content
-  author: string // Who wrote it
-  timestamp: Date // When it was written
+```ts
+export default interface CommentData {
+  propertyId: string
+  value: unknown
+  date: Date
+  formatDateFunction?: (date: Date) => string // Optional function to format the date
+  author?: string
+  commentId?: number // Optional, if available
+  columnId?: string // Optional, if provided, applies the comment to the specific column only
+  text: string // The comment text
 }
 ```
 
@@ -60,19 +62,4 @@ const [comments, setComments] = useState<CommentData[]>([])
     }
   }}
 />
-```
-
-### Manage Comments
-
-Track and manage comments:
-
-```tsx
-const getCommentsForCell = (headerId: string, itemId: string | number) => {
-  return comments.filter((c) => c.headerId === headerId && c.itemId === itemId)
-}
-
-const deleteComment = async (commentId: string) => {
-  await deleteCommentFromDatabase(commentId)
-  setComments(comments.filter((c) => c.id !== commentId))
-}
 ```
