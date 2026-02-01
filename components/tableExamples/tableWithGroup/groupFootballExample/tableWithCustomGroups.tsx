@@ -1,11 +1,15 @@
 "use client"
 
-import React, { useState } from "react"
-import { BaseTable, BaseTableHeader } from "react-base-data-table"
-import CommentData from "react-base-data-table/dist/types/components/BaseTable/models/CommentData"
-import HighlightCondition from "react-base-data-table/dist/types/components/BaseTable/models/HighlightCondition"
+import { useState } from "react"
+import {
+  BaseTable,
+  BaseTableHeader,
+  CommentData,
+  HighlightCondition,
+} from "react-base-data-table"
 
 import database from "./database.json"
+import FootballPlayer from "./FootballPlayer"
 
 // Team colors for Italian Serie A teams (muted/pastel versions)
 const teamColors: Record<string, { bg: string; text: string; border: string }> =
@@ -70,7 +74,7 @@ const getTeamColors = (team: string) => {
   return teamColors[team] || teamColors["default"]
 }
 
-const data = database
+const data: FootballPlayer[] = database
 
 const headers: BaseTableHeader[] = [
   { text: "Player", id: "player", width: 150 },
@@ -109,11 +113,13 @@ const headers: BaseTableHeader[] = [
 ]
 
 const TableWithGroups = () => {
-  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set())
   const [highlights, setHighlights] = useState<HighlightCondition[]>([])
   const [comments, setComments] = useState<CommentData[]>([])
 
-  const handleSetHighlight = (highlight: HighlightCondition, item: any) => {
+  const handleSetHighlight = (
+    highlight: HighlightCondition,
+    item: FootballPlayer
+  ) => {
     const newHighlight = {
       ...highlight,
       propertyId: "player",
@@ -135,7 +141,7 @@ const TableWithGroups = () => {
   const handleRemoveHighlight = (
     highlight: HighlightCondition,
     cssProperty: string,
-    item: any
+    item: FootballPlayer
   ) => {
     setHighlights((prev) => {
       const existingIndex = prev.findIndex(
@@ -160,7 +166,7 @@ const TableWithGroups = () => {
     })
   }
 
-  const handleSaveComment = (comment: CommentData, item: any) => {
+  const handleSaveComment = (comment: CommentData, item: FootballPlayer) => {
     const newComment = {
       ...comment,
       propertyId: "player",
@@ -182,7 +188,7 @@ const TableWithGroups = () => {
     })
   }
 
-  const handleDeleteComment = (comment: CommentData, item: any) => {
+  const handleDeleteComment = (comment: CommentData, item: FootballPlayer) => {
     setComments((prev) =>
       prev.filter(
         (c) =>
@@ -197,7 +203,7 @@ const TableWithGroups = () => {
 
   return (
     <div className="not-prose">
-      <BaseTable
+      <BaseTable<FootballPlayer>
         items={data}
         headers={headers}
         groupBy="team"

@@ -1,9 +1,9 @@
 "use client"
 
-import React from "react"
 import { BaseTable, BaseTableHeader } from "react-base-data-table"
 
 interface TableItem {
+  [key: string]: string | number | undefined
   id: number
   name: string
   department: string
@@ -167,7 +167,7 @@ export default function GroupedTableExample() {
 
   return (
     <div className="not-prose">
-      <BaseTable
+      <BaseTable<TableItem>
         headers={headers}
         items={items}
         groupBy="department"
