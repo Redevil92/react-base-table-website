@@ -1,12 +1,12 @@
 ---
 title: Installation
-description: Learn how to install and set up react-base-table in your project.
-keywords: ["installation", "setup", "npm", "yarn", "react-base-table"]
+description: Learn how to install and set up react-base-data-table in your project.
+keywords: ["installation", "setup", "npm", "yarn", "react-base-data-table"]
 ---
 
 ## Installation
 
-Get started by installing `react-base-table` in your React project.
+Get started by installing `react-base-data-table` in your React project.
 
 ### Prerequisites
 
@@ -29,21 +29,21 @@ Choose your preferred package manager:
   <TabsContent value="npm">
 
 ```bash
-npm install react-base-table
+npm install react-base-data-table
 ```
 
   </TabsContent>
   <TabsContent value="yarn">
 
 ```bash
-yarn add react-base-table
+yarn add react-base-data-table
 ```
 
   </TabsContent>
   <TabsContent value="pnpm">
 
 ```bash
-pnpm add react-base-table
+pnpm add react-base-data-table
 ```
 
   </TabsContent>
@@ -54,7 +54,7 @@ pnpm add react-base-table
 Import the required CSS in your application entry point:
 
 ```tsx
-import "react-base-table/styles.css"
+import "react-base-data-table/styles.css"
 ```
 
 ### Basic Usage
@@ -62,9 +62,9 @@ import "react-base-table/styles.css"
 Here's a minimal example to verify your installation:
 
 ```tsx
-import BaseTable, { Column } from "react-base-table"
+import BaseTable, { Column } from "react-base-data-table"
 
-import "react-base-table/styles.css"
+import "react-base-data-table/styles.css"
 
 const data = [
   { id: 1, name: "John Doe", age: 28 },
@@ -85,10 +85,10 @@ export default App
 
 ### TypeScript Support
 
-`react-base-table` includes TypeScript definitions out of the box. No additional `@types` packages are required.
+`react-base-data-table` includes TypeScript definitions out of the box. No additional `@types` packages are required.
 
 ```tsx
-import BaseTable, { Column, ColumnShape } from "react-base-table"
+import BaseTable, { Column, ColumnShape } from "react-base-data-table"
 
 interface Person {
   id: number
