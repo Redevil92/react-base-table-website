@@ -1,7 +1,6 @@
 "use client"
 
-import React from "react"
-import { BaseTable, BaseTableHeader } from "react-base-data-table"
+import { BaseTable, type BaseTableHeader } from "react-base-data-table"
 
 const data = [
   { id: 1, name: "Alice", age: 24, country: "USA" },

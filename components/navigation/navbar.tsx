@@ -52,6 +52,7 @@ export function NavMenu({ isSheet = false }) {
   return (
     <>
       {Navigations.map((item) => {
+        const external = (item as { external?: boolean }).external
         const Comp = (
           <Anchor
             key={item.title + item.href}
@@ -59,11 +60,11 @@ export function NavMenu({ isSheet = false }) {
             absolute
             className="flex items-center gap-1 text-sm"
             href={item.href}
-            target={item.external ? "_blank" : undefined}
-            rel={item.external ? "noopener noreferrer" : undefined}
+            target={external ? "_blank" : undefined}
+            rel={external ? "noopener noreferrer" : undefined}
           >
             {item.title}{" "}
-            {item.external && (
+            {external && (
               <LuArrowUpRight className="h-3 w-3 align-super" strokeWidth={3} />
             )}
           </Anchor>

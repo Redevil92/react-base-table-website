@@ -6,24 +6,26 @@ keywords: ["nested rows", "hierarchy", "tree", "parent-child"]
 
 ## Nested Rows
 
-Display hierarchical data structures with parent-child relationships.
+Display hierarchical data structures with parent-child relationships. This feature allows you to render array properties of your items as nested sub-rows.
 
 ### Data Structure
+
+Your data should contain parent items with an array property holding child items:
 
 ```tsx
 const items = [
   {
     id: 1,
-    name: "Engineering",
-    children: [
+    field: "Engineering",
+    employees: [
       { id: 1.1, name: "John Doe", level: 2 },
       { id: 1.2, name: "Jane Smith", level: 2 },
     ],
   },
   {
     id: 2,
-    name: "Sales",
-    children: [
+    field: "Sales",
+    employees: [
       { id: 2.1, name: "Bob Johnson", level: 2 },
       { id: 2.2, name: "Alice Brown", level: 2 },
     ],
@@ -31,86 +33,58 @@ const items = [
 ]
 ```
 
-### Implementation
+### Configuration
 
-```tsx
-<BaseTable
-  headers={headers}
-  items={items}
-  advancedSettings={{
-    enableRowExpand: true, // Enable row expansion
-  }}
-/>
-```
-
-### Expand/Collapse
-
-Control which rows are expanded:
-
-```tsx
-const [expandedRows, setExpandedRows] = useState<(string | number)[]>([])
-
-<BaseTable
-  headers={headers}
-  items={items}
-  expandedRowKeys={expandedRows}
-  onExpandedRowsChange={setExpandedRows}
-/>
-```
-
-### Custom Row Rendering
-
-Customize how nested rows appear:
+To display nested rows, configure the `fromArray` property on your table headers. This tells the table which array property contains the child items.
 
 ```tsx
 const headers: BaseTableHeader[] = [
   {
+    id: "field",
+    text: "Department",
+  },
+  {
     id: "name",
-    text: "Name",
-    customRender: (item, header, fromArrayData, isDisabled) => {
-      const indent = (item.level - 1) * 20
-      return (
-        <div style={{ paddingLeft: `${indent}px` }}>
-          {item.children && (
-            <span onClick={() => toggleExpand(item.id)}>
-              {isExpanded ? "▼" : "▶"}
-            </span>
-          )}
-          {item.name}
-        </div>
-      )
-    },
+    text: "Employee Name",
+    fromArray: "employees", // Points to the array property
+  },
+  {
+    id: "level",
+    text: "Level",
+    fromArray: "employees",
   },
 ]
 ```
 
-### Multi-level Nesting
+### How It Works
 
-Support multiple levels of nesting:
+1. Set `fromArray` on headers that should display data from the nested array
+2. The array property (e.g., `employees`) must contain objects with the fields referenced by those headers (e.g., `name`, `level`)
+3. The table will render one sub-row for each item in the array
+
+### Array Rows Only
+
+By default, the table renders both the parent row and the child rows. If your parent item doesn't have the fields displayed by the `fromArray` headers, you can hide the parent row by setting `arrayRowsOnly: true`.
 
 ```tsx
-const items = [
+const headers: BaseTableHeader[] = [
   {
-    id: 1,
-    name: "Company",
-    children: [
-      {
-        id: 1.1,
-        name: "Engineering",
-        children: [
-          { id: 1.1.1, name: "Backend Team" },
-          { id: 1.1.2, name: "Frontend Team" },
-        ],
-      },
-      { id: 1.2, name: "Sales" },
-    ],
+    id: "field",
+    text: "Department",
+  },
+  {
+    id: "name",
+    text: "Employee Name",
+    fromArray: "employees",
+    arrayRowsOnly: true, // Only show rows from the array, not the parent
+  },
+  {
+    id: "level",
+    text: "Level",
+    fromArray: "employees",
+    arrayRowsOnly: true,
   },
 ]
 ```
 
-### Use Cases
-
-- **Organizational hierarchy** - Company > Department > Team > Person
-- **Product categories** - Category > Subcategory > Product > SKU
-- **File structure** - Folder > Subfolder > File
-- **Task management** - Epic > Story > Task > Subtask
+In the example above, `arrayRowsOnly` is set to `true` because the parent items don't have `name` or `level` properties — only the `employees` array items have them.

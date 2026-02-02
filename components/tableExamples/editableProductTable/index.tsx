@@ -1,9 +1,15 @@
 "use client"
 
 import React, { useState } from "react"
-import { BaseTable, type HighlightCondition } from "react-base-data-table"
+import {
+  BaseTable,
+  BaseTableHeader,
+  CommentData,
+  type HighlightCondition,
+} from "react-base-data-table"
 
 interface Product {
+  [key: string]: string | number
   id: number
   name: string
   category: string

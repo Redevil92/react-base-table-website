@@ -97,10 +97,6 @@ export const Documents: Paths[] = [
         href: "/bulk-update",
       },
       {
-        title: "Delete",
-        href: "/delete",
-      },
-      {
         title: "Copy and Paste",
         href: "/copy-and-paste",
       },
@@ -119,20 +115,6 @@ export const Documents: Paths[] = [
       {
         title: "Context Menu",
         href: "/context-menu",
-        items: [
-          {
-            title: "Single Cell Context Menu",
-            href: "/single-cell-context-menu",
-          },
-          {
-            title: "Selection Context Menu",
-            href: "/selection-context-menu",
-          },
-          {
-            title: "Headers Context Menu",
-            href: "/headers-context-menu",
-          },
-        ],
       },
     ],
   },

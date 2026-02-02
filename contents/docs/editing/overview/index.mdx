@@ -6,9 +6,9 @@ keywords: ["overview", "editing system", "concepts", "workflow"]
 
 ## Editing Overview
 
-The editing system allows users to modify data directly in the table with built-in validation and persistence.
+The editing system allows users to modify data directly in the table. To make a column editable, add the optional `editOptions` field to your table headers. You must also provide the appropriate callback function to handle and persist updates to your data.
 
-### How Editing Works
+### A Simple Example
 
 ```tsx
 // 1. Define editable columns
@@ -34,17 +34,27 @@ const headers: BaseTableHeader[] = [
 />
 ```
 
-### Edit Options
+### Edit Options in Detail
 
 Configure editing per column:
 
-```tsx
+```ts
 editOptions: {
-  editable: true,              // Enable editing
-  type: "string",              // Editor type
-  required: true,              // Field required
-  isDisabled: (item) => {},    // Conditional disable
-  notApplicable: (item) => {}, // Mark as N/A
+  editable?: boolean;
+  isDisabled?: (
+    item: TableItem,
+    fromArrayData?: { index: number }
+  ) => boolean;
+  notApplicable?: (
+    item: TableItem,
+    fromArrayData?: { index: number }
+  ) => boolean;
+  greyedOutIfNotEditable?: boolean;
+  required?: boolean;
+  type: TableHeaderType;
+  options?: string[]; // only valid for List type
+  defaultValue?: string | number;
+  canAddNewOption?: boolean; // only valid for List type
 }
 ```
 
