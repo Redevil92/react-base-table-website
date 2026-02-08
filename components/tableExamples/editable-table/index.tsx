@@ -1,9 +1,12 @@
 "use client"
 
 import React, { useState } from "react"
-import CommentData from "react-base-data-table/dist/types/components/BaseTable/models/CommentData"
-import HighlightCondition from "react-base-data-table/dist/types/components/BaseTable/models/HighlightCondition"
-import { BaseTable, BaseTableHeader } from "react-table-editable"
+import {
+  BaseTable,
+  BaseTableHeader,
+  CommentData,
+  HighlightCondition,
+} from "react-table-editable"
 
 interface TableItem {
   [key: string]: string | number
