@@ -6,7 +6,7 @@ import {
   BaseTableHeader,
   CommentData,
   HighlightCondition,
-} from "react-base-data-table"
+} from "react-table-editable"
 
 import database from "./database.json"
 import FootballPlayer from "./FootballPlayer"

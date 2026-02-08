@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import { BaseTable, BaseTableHeader } from "react-base-data-table"
+import { BaseTable, BaseTableHeader } from "react-table-editable"
 
 const data = [
   { id: 1, name: "Alice", age: 24, country: "USA" },

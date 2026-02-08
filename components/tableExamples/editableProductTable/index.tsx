@@ -6,7 +6,7 @@ import {
   BaseTableHeader,
   CommentData,
   type HighlightCondition,
-} from "react-base-data-table"
+} from "react-table-editable"
 
 interface Product {
   [key: string]: string | number

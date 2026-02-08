@@ -1,6 +1,6 @@
 "use client"
 
-import { BaseTable, BaseTableHeader } from "react-base-data-table"
+import { BaseTable, BaseTableHeader } from "react-table-editable"
 
 interface TableItem {
   [key: string]: string | number | undefined

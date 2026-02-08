@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { BaseTable, BaseTableHeader } from "react-base-data-table"
 import TableItem from "react-base-data-table/dist/types/components/BaseTable/models/TableItem"
+import { BaseTable, BaseTableHeader } from "react-table-editable"
 
 // Example: Student with multiple test scores stored as an array
 // The fromArray feature expands each array item into a separate row

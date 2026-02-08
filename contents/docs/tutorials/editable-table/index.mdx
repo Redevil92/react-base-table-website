@@ -120,7 +120,7 @@ const handleBulkFieldChange = (changes, headerId) => {
 Highlights use `propertyId` and `value` to identify the row:
 
 ```tsx
-import { HighlightCondition } from "react-base-data-table"
+import { HighlightCondition } from "react-table-editable"
 
 const [highlights, setHighlights] = useState<HighlightCondition[]>([
   {
@@ -187,7 +187,7 @@ const handleRemoveHighlight = (
 Comments use `propertyId`, `value`, and `columnId` to identify the cell:
 
 ```tsx
-import { CommentData } from "react-base-data-table"
+import { CommentData } from "react-table-editable"
 
 const [comments, setComments] = useState<CommentData[]>([
   {
@@ -243,7 +243,7 @@ import {
   BaseTableHeader,
   CommentData,
   HighlightCondition,
-} from "react-base-data-table"
+} from "react-table-editable"
 
 export default function EditableTableExample() {
   const [items, setItems] = useState([
